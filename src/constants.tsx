@@ -9,4 +9,5 @@ export const ENDPOINT_HOME = {
 };
 export const ENDPOINT_PATHS = {
   LOGIN: '/user/login',
+  LATEST_VOLTAGE_LEVELS: '/devices/latest_voltage_levels',
 };

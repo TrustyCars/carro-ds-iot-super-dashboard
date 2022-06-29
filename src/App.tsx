@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import Home from './Home';
 import Login from './Login';
@@ -13,8 +14,9 @@ function App() {
   const [token, setToken] = React.useState(localStorage.getItem('jwt_token'));
 
  if (token != null) {
+    axios.defaults.headers.common['authorizationToken'] = token;
     return (
-      <JwtTokenContext.Provider value={{ token }}>
+      <JwtTokenContext.Provider value={{ token, setToken }}>
         <Home />
       </JwtTokenContext.Provider>
     );
