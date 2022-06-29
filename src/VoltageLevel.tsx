@@ -28,7 +28,7 @@ const VoltageLevel: React.FC = () => {
         paddingLeft: '2rem',
       }}
     >
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ 'th, td': { fontFamily: 'Poppins' } }}>
         <Table>
           <TableHead>
             <TableRow>

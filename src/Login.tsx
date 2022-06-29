@@ -61,12 +61,12 @@ const Login: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            padding: '4rem 6rem',
+            padding: '10% 6rem',
             paddingBottom: '10rem',
           }}
         >
           <img src={Logo} style={{ width: '70%', marginBottom: '0.5rem' }} />
-          <div style={{ color: COLORS.PRIMARY, fontFamily: 'Poppins', fontSize: '2.2rem', fontWeight: '600', marginBottom: '6rem' }}>Super Dashboard</div>
+          <div style={{ color: COLORS.PRIMARY, fontFamily: 'Poppins', fontSize: '2.2rem', fontWeight: '600', marginBottom: '10%' }}>Super Dashboard</div>
           <div
             style={{
               fontFamily: 'Poppins',
