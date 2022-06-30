@@ -50,7 +50,7 @@ const Home: React.FC = () => {
       <div
         style={{
           minWidth: '100vw',
-          minHeight: '100vh',
+          paddingTop: '4rem',
         }}
       >
         {currDashboard == DASHBOARDS.CARRO_EVERYWHERE
