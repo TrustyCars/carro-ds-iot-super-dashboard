@@ -1,8 +1,16 @@
 import React from 'react';
+import CarroEverywhere from './CarroEverywhere';
 
 const Home: React.FC = () => {
   return (
-    <div>home</div>
+    <div
+      style={{
+        minWidth: '100vw',
+        minHeight: '100vh',
+      }}
+    >
+      <CarroEverywhere />
+    </div>
   );
 };
 

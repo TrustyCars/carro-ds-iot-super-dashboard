@@ -1,15 +1,20 @@
 import React from 'react';
 import axios from 'axios';
-import { Alert, Button, Input } from '@mui/material';
+import { Alert, IconButton, Input, InputAdornment } from '@mui/material';
+import { VisibilityOff, Visibility } from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { COLORS, ENDPOINT_HOME, ENDPOINT_PATHS } from './constants';
 import Logo from './logo.svg';
 import CarroCareWorkshop from './images/carro_care_workshop.jpeg';
 import { JwtTokenContext } from './App';
 
 const Login: React.FC = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
+  const [isLoading, setIsLoading] = React.useState(false);
   const [didLoginFail, setDidLoginFail] = React.useState(false);
 
   const { setToken } = React.useContext(JwtTokenContext);
@@ -56,12 +61,12 @@ const Login: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            padding: '4rem 6rem',
+            padding: '10% 6rem',
             paddingBottom: '10rem',
           }}
         >
           <img src={Logo} style={{ width: '70%', marginBottom: '0.5rem' }} />
-          <div style={{ color: COLORS.PRIMARY, fontFamily: 'Poppins', fontSize: '2.2rem', fontWeight: '600', marginBottom: '6rem' }}>Super Dashboard</div>
+          <div style={{ color: COLORS.PRIMARY, fontFamily: 'Poppins', fontSize: '2.2rem', fontWeight: '600', marginBottom: '10%' }}>Super Dashboard</div>
           <div
             style={{
               fontFamily: 'Poppins',
@@ -77,10 +82,25 @@ const Login: React.FC = () => {
           />
           <Input
             placeholder="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  onMouseDown={event => event.preventDefault()}
+                  onMouseUp={event => event.preventDefault()}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
             style={{ margin: '1rem 0' }}
             onChange={event => setPassword(event.target.value)}/>
-          <Button
+          <LoadingButton
+            loading={isLoading}
             variant="contained"
             sx={{
               backgroundColor: COLORS.PRIMARY,
@@ -95,6 +115,7 @@ const Login: React.FC = () => {
               marginBottom: '1rem',
             }}
             onClick={() => {
+              setIsLoading(true);
               axios(ENDPOINT_HOME.STAGING + ENDPOINT_PATHS.LOGIN, {
                 method: 'post',
                 headers: {
@@ -105,6 +126,7 @@ const Login: React.FC = () => {
                   password: password,
                 },
               }).then(res => {
+                setIsLoading(false);
                 if (res.data.statusCode == 200) {
                   localStorage.setItem('jwt_token', res.data.token);
                   if (setToken) setToken(res.data.token);
@@ -114,10 +136,11 @@ const Login: React.FC = () => {
                 }
               }).catch(err => {
                 console.log(err);
+                setIsLoading(false);
                 setDidLoginFail(true);
               });
             }}
-          >Login</Button>
+          >Login</LoadingButton>
           <Alert severity="error" sx={{ visibility: (didLoginFail ? 'visible' : 'hidden') }}>Invalid login. Please check your credentials & try again.</Alert>
         </div>
       </div>
