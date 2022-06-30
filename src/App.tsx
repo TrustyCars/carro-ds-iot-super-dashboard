@@ -29,7 +29,7 @@ function App() {
   // Display home page. If not, display login page.
   const [token, setToken] = React.useState(localStorage.getItem('jwt_token'));
 
- if (token != null) {
+  if (token != null) {
     axios.defaults.headers.common['authorizationToken'] = token;
     return (
       <JwtTokenContext.Provider value={{ token, setToken }}>
