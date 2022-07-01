@@ -10,7 +10,7 @@ const CarroEverywhere: React.FC = () => {
       <AppBar position='fixed' sx={{ backgroundColor: COLORS.PRIMARY, div: { fontFamily: 'Poppins' } }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Carro Everywhere Dashboard
+            Carro Everywhere
           </Typography>
           <LogoutButton />
         </Toolbar>
@@ -18,7 +18,7 @@ const CarroEverywhere: React.FC = () => {
       <div
         style={{
           width: '100vw',
-          height: '200vh',
+          height: '100vh',
         }}
       >
         <VoltageLevel />

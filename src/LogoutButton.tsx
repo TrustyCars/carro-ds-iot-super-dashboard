@@ -9,15 +9,14 @@ const LogoutButton: React.FC = () => {
 
   return (
     <Button
-      variant="outlined"
-      sx={{ border: `1px solid ${COLORS.WHITE}`, ':hover': { border: `1px solid ${COLORS.WHITE}` } }}
+      variant="text"
+      sx={{ minWidth: '2rem', ':hover': { backgroundColor: 'transparent' } }}
       onClick={() => {
         localStorage.removeItem('jwt_token');
         setToken && setToken(null);
       }}
     >
-      <LogoutTwoToneIcon fontSize='medium' sx={{ fill: COLORS.WHITE, marginRight: '0.5rem' }} />
-      <span style={{ color: COLORS.WHITE, fontSize: '1rem', textTransform: 'none' }}>Logout</span>
+      <LogoutTwoToneIcon fontSize='medium' sx={{ fill: COLORS.WHITE }} />
     </Button>
   );
 };
