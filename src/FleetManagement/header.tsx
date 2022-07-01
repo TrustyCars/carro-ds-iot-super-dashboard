@@ -39,10 +39,17 @@ function Header(){
     const renderLeftDrawer = () => (
       <div id="leftdrawer" className="sidenav left">
         <CloseRoundedIcon className="closebtn left-close" onClick={()=>closeNav("leftdrawer")} sx={{ fill: COLORS.WHITE }} />
-        <Link style={{textDecoration: 'none', textAlign: 'center' }}   to="/" onClick={()=>closeNav("leftdrawer")} >
+        <Link
+          style={{textDecoration: 'none', textAlign: 'center' }}
+          to={`/${window.location.search}`}
+          onClick={() => closeNav("leftdrawer")}>
           <p>Home</p>
         </Link>
-        <Link style={{ textDecoration: 'none', textAlign: 'center' }}   to="/devices"  onClick={()=>closeNav("leftdrawer")} >
+        <Link
+          style={{ textDecoration: 'none', textAlign: 'center' }}
+          to={`/devices${window.location.search}`}
+           onClick={() => closeNav("leftdrawer")}
+        >
           <p>Devices</p>
         </Link>
         {/* <Link style={{textDecoration: 'none'}}   to="/drivers"  onClick={()=>closeNav("leftdrawer")} >

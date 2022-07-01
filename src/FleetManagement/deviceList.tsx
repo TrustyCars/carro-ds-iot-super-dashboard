@@ -44,7 +44,7 @@ function DeviceList() {
                   <Card
                     key ={idx}
                     className='device-card'
-                    onClick={() => navigate(`/device/${x.DEVICE_ID}`)}
+                    onClick={() => navigate(`/device/${x.DEVICE_ID}${window.location.search}`)}
                     sx={{ m: '1rem', p: '0.75rem', pt: '0', width: '25%' }}>
                     <CardContent>
                       <h1>{x.DEVICE_ID}</h1>

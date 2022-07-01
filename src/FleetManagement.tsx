@@ -106,7 +106,7 @@ const FleetManagement: React.FC = () => {
               cursor: 'pointer',
               textDecoration: 'underline'
             }}
-            onClick={()=>navigate(`device/${x.device_id}`)}
+            onClick={()=>navigate(`device/${x.device_id}${window.location.search}`)}
           >
             More details
           </p>

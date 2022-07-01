@@ -15,6 +15,7 @@ enum DASHBOARDS {
   FLEET_MANAGEMENT = 'FLEET_MANAGEMENT',
   KEYPRESS = 'KEYPRESS',
 };
+const DEFAULT_DASHBOARD = DASHBOARDS.FLEET_MANAGEMENT;
 
 const getHomeElement = (currDashboard: string) => {
   switch (currDashboard) {
@@ -28,8 +29,19 @@ const getHomeElement = (currDashboard: string) => {
   }
 };
 
+const splitQueryString = (search: string) => (search.slice(1).split('&'));
+const getCurrentDashboard = (search: string) => {
+  if (!search) {
+    window.location.search = `dashboard=${DEFAULT_DASHBOARD}`;
+    return DEFAULT_DASHBOARD;
+  }
+  else return (
+    splitQueryString(search)[splitQueryString(search).findIndex(v => v.slice(0, 9) == 'dashboard')].slice(10)
+  );
+};
+
 const Home: React.FC = () => {
-  const [currDashboard, setCurrDashboard] = React.useState<string>(DASHBOARDS.FLEET_MANAGEMENT);
+  const dashboard = React.useRef<string>(getCurrentDashboard(window.location.search));
 
   return (
     <>
@@ -37,10 +49,14 @@ const Home: React.FC = () => {
         <Toolbar>
           <FormControl variant="standard" sx={{ m: 1 }}>
             <Select
-              value={currDashboard}
+              value={dashboard.current}
               onChange={(event: SelectChangeEvent) => {
-                console.log("select changed")
-                setCurrDashboard(event.target.value)
+                const qs_arr = window.location.search.slice(1).split('&');
+                qs_arr[qs_arr.findIndex(v => v.slice(0, 9) == 'dashboard')] = `dashboard=${event.target.value}`;
+
+                window.location.href = `/?${qs_arr.join('&')}`;
+
+                dashboard.current = event.target.value;
               }}
               label="Dashboard"
               sx={{
@@ -79,11 +95,11 @@ const Home: React.FC = () => {
       >
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={getHomeElement(currDashboard)} />
-            { currDashboard == DASHBOARDS.FLEET_MANAGEMENT &&
+            <Route path='/' element={getHomeElement(dashboard.current)} />
+            { dashboard.current == DASHBOARDS.FLEET_MANAGEMENT &&
               <Route path='devices' element={<DeviceList />} />
             }
-            { currDashboard == DASHBOARDS.FLEET_MANAGEMENT &&
+            { dashboard.current == DASHBOARDS.FLEET_MANAGEMENT &&
               <Route path='device/:id' element={<Device />} />
             }
           </Routes>
