@@ -1,0 +1,29 @@
+.device-page-container {
+  padding: 0 12rem;
+  padding-top: 7rem;
+}
+
+.device-page-container .title {
+  padding: 0 1rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.device-page-container .loader-container {
+  width: 100%;
+  min-height: 25vh;
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.device-list-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.device-card {
+  cursor: pointer;
+}

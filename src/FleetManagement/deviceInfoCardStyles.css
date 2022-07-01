@@ -1,0 +1,145 @@
+/* mobile styles */
+@media only screen and (max-width: 600px) {
+  .voltage-card {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .voltage-time-series-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 3;
+  }
+
+  .vehicle-speed-time-series-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 4;
+  }
+
+  .coordinates-and-trips-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 5;
+  }
+
+  .entities-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 6;
+  }
+}
+
+/* tablet styles */
+@media only screen and (min-width: 600px) {
+  .voltage-card {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .voltage-time-series-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 3;
+  }
+
+  .vehicle-speed-time-series-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 4;
+  }
+
+  .coordinates-and-trips-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 5;
+  }
+
+  .entities-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 6;
+  }
+}
+
+
+/* desktop styles */
+@media only screen and (min-width: 900px) {
+  .voltage-card {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .voltage-time-series-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 5;
+    width: 46vw;
+  }
+
+  .vehicle-speed-time-series-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 5;
+    grid-row-end: 8;
+    width: 46vw;
+  }
+
+  .coordinates-and-trips-card {
+    grid-column-start: 3;
+    grid-column-end: 8;
+    grid-row-start: 1;
+    grid-row-end: 8;
+    width: 46vw;
+  }
+  .entities-card {
+    grid-column-start: 1;
+    grid-column-end:8;
+    grid-row: 10;
+  }
+}
+
+/* global styles */
+.voltage-card, .id-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.voltage-card p, .id-card p {
+  margin-bottom: 0;
+}
+
+.voltage-indicator {
+  width: 100%;
+  height: 60%;
+  margin-top: 0.2rem;
+  border-radius: 0.25rem;
+
+  display: flex;
+  align-items: center;
+}
+
+.voltage-indicator h6 {
+  margin: 0 0.3rem;
+  color: white;
+  font-weight: bold;
+}
+
+.voltage-time-series-card,
+.vehicle-speed-time-series-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.voltage-time-series-card div div.MuiCardContent-root {
+  flex-direction: column;
+  width: 100%;
+}
+
+.voltage-time-series-loading-card div {
+  display: block;
+}

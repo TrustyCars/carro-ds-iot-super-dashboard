@@ -24,7 +24,7 @@ const VoltageLevel: React.FC = () => {
     <div
       style={{
         width: '40vw',
-        paddingTop: '6rem',
+        paddingTop: '2rem',
         paddingLeft: '2rem',
       }}
     >

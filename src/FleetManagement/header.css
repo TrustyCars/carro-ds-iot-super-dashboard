@@ -1,0 +1,104 @@
+.header-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  background-color: white ;
+  border-style: none;
+  padding: 10px;
+  position: fixed;
+  top: 4rem;
+  width: 100%;
+
+  /* keeps the header above the map on scroll */
+  z-index: 999;
+}
+.header-title{
+  padding-left:10px;
+  padding-right:10px;
+}
+.drawer-container{
+  position: absolute;
+  color: white;
+}
+
+.drawer-icon {
+  cursor: pointer;
+}
+
+.left-icon{
+  left: 10px;
+  color: #ff5722;
+  display: flex;
+}
+.right-icon{
+  right: 30px;
+}
+.left-close{
+  right: 0px;
+}
+.right-close{
+  left: 0px;
+}
+.left{
+  left: 0;
+
+}
+.right{
+  right: 0;
+}
+.drawer-icon{
+  font-size: 40px;
+  color: #ff5722;
+}
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  background-color: #ff5722 ;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav p {
+  padding: 1rem auto;
+  text-decoration: none;
+  font-size: 25px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+/* the below rule is needed to keep the drawers above the header + above any maps */
+.sidenav.left,
+.sidenav.right {
+    z-index: 9999;
+}
+
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  font-size: 36px;
+  margin: 1rem;
+  cursor: pointer;
+}
+input{
+    background-color: lightgrey;
+    height: 20px;
+    border-radius: 10px;
+    border-style: none;
+}
+input::placeholder{
+    padding-left: 10px;
+
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
