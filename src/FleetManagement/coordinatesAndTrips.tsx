@@ -150,23 +150,25 @@ const CoordinatesAndTripsCard:React.FC<CoordinatesAndTripsCardProps> = ({ id, po
                     </Popup>
                   </Marker>}
                 {selectedTrips.map((x, i) => {
-                  return (
-                    <React.Fragment key={i}>
-                      <Marker position={[parseFloat(x[0].GPS_LAT),parseFloat(x[0].GPS_LONG)]} icon={greenIcon}>
-                        <Popup>
-                          <p className='marker-p'>TRIP ID : {x[0].ID}</p>
-                          <p>{x[0].SERVER_DATETIME.toLocaleString()}</p>
-                        </Popup>
-                      </Marker>
-                      <Marker position={[parseFloat(x[x.length-1].GPS_LAT),parseFloat(x[x.length-1].GPS_LONG)]} icon={redIcon}>
-                        <Popup>
-                          <p className='marker-p'>TRIP ID: {x[x.length-1].ID}</p>
-                          <p>{x[x.length-1].SERVER_DATETIME.toLocaleString()}</p>
-                        </Popup>
-                      </Marker>
-                      <Trip trip={x}/>
-                    </React.Fragment>
-                  );
+                  if (x.length > 0) {
+                    return (
+                      <React.Fragment key={i}>
+                        <Marker position={[parseFloat(x[0].GPS_LAT),parseFloat(x[0].GPS_LONG)]} icon={greenIcon}>
+                          <Popup>
+                            <p className='marker-p'>TRIP ID : {x[0].ID}</p>
+                            <p>{x[0].SERVER_DATETIME.toLocaleString()}</p>
+                          </Popup>
+                        </Marker>
+                        <Marker position={[parseFloat(x[x.length-1].GPS_LAT),parseFloat(x[x.length-1].GPS_LONG)]} icon={redIcon}>
+                          <Popup>
+                            <p className='marker-p'>TRIP ID: {x[x.length-1].ID}</p>
+                            <p>{x[x.length-1].SERVER_DATETIME.toLocaleString()}</p>
+                          </Popup>
+                        </Marker>
+                        <Trip trip={x}/>
+                      </React.Fragment>
+                    );
+                  }
                 })}
           </MapContainer>
         </CardContent>
