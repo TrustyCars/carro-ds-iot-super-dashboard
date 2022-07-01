@@ -1,0 +1,8 @@
+.device {
+  margin-top: 2rem; /* to avoid the header */
+  padding: 3rem;
+}
+.device-map{
+  height: 100%;
+}
+

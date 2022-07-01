@@ -1,17 +1,35 @@
 import React from 'react';
-import { AppBar, FormControl, MenuItem, Select, SelectChangeEvent, Toolbar, Typography } from '@mui/material';
+import axios from 'axios';
+import { AppBar, FormControl, MenuItem, Select, SelectChangeEvent, Toolbar } from '@mui/material';
 import { COLORS } from './constants';
 import LogoutButton from './LogoutButton';
 import CarroEverywhere from './CarroEverywhere';
+import FleetManagement from './FleetManagement';
 import Keypress from './Keypress';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import DeviceList from './FleetManagement/deviceList';
+import Device from './FleetManagement/device';
 
 enum DASHBOARDS {
   CARRO_EVERYWHERE = 'CARRO_EVERYWHERE',
-  KEYPRESS = 'KEYPRESS'
+  FLEET_MANAGEMENT = 'FLEET_MANAGEMENT',
+  KEYPRESS = 'KEYPRESS',
+};
+
+const getHomeElement = (currDashboard: string) => {
+  switch (currDashboard) {
+    case DASHBOARDS.CARRO_EVERYWHERE:
+      return <CarroEverywhere />;
+    case DASHBOARDS.FLEET_MANAGEMENT:
+      axios.defaults.headers.common['authorizationToken'] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOiJET05UX1RPVUNIX1RISVNfVVNFUiIsInN0YXR1cyI6MSwiZXhwIjoxNjg3ODU3Nzg2LCJpYXQiOjE2NTYzMjE3ODZ9.-V3NczLxdfoYMHCcAxcd-IljdvfNE6lqJzgyHrm4Yb8";
+      return <FleetManagement />;
+    case DASHBOARDS.KEYPRESS:
+      return <Keypress />;
+  }
 };
 
 const Home: React.FC = () => {
-  const [currDashboard, setCurrDashboard] = React.useState<string>(DASHBOARDS.CARRO_EVERYWHERE);
+  const [currDashboard, setCurrDashboard] = React.useState<string>(DASHBOARDS.FLEET_MANAGEMENT);
 
   return (
     <>
@@ -20,7 +38,10 @@ const Home: React.FC = () => {
           <FormControl variant="standard" sx={{ m: 1 }}>
             <Select
               value={currDashboard}
-              onChange={(event: SelectChangeEvent) => setCurrDashboard(event.target.value)}
+              onChange={(event: SelectChangeEvent) => {
+                console.log("select changed")
+                setCurrDashboard(event.target.value)
+              }}
               label="Dashboard"
               sx={{
                 color: COLORS.WHITE,
@@ -34,6 +55,9 @@ const Home: React.FC = () => {
             >
               <MenuItem value={DASHBOARDS.CARRO_EVERYWHERE}>
                 Carro Everywhere
+              </MenuItem>
+              <MenuItem value={DASHBOARDS.FLEET_MANAGEMENT}>
+                Fleet Management
               </MenuItem>
               <MenuItem value={DASHBOARDS.KEYPRESS}>
                 Keypress
@@ -53,11 +77,17 @@ const Home: React.FC = () => {
           paddingTop: '4rem',
         }}
       >
-        {currDashboard == DASHBOARDS.CARRO_EVERYWHERE
-          && <CarroEverywhere />}
-
-        {currDashboard == DASHBOARDS.KEYPRESS
-          && <Keypress />}
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={getHomeElement(currDashboard)} />
+            { currDashboard == DASHBOARDS.FLEET_MANAGEMENT &&
+              <Route path='devices' element={<DeviceList />} />
+            }
+            { currDashboard == DASHBOARDS.FLEET_MANAGEMENT &&
+              <Route path='device/:id' element={<Device />} />
+            }
+          </Routes>
+        </BrowserRouter>
       </div>
     </>
   );
