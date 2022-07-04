@@ -10,14 +10,14 @@ import "./header.css"
 function Header(){
 
     const openNav=(id: string)=> {
-        if(id=="leftdrawer"){
+        if(id==="leftdrawer"){
             document.getElementById(id)!.style.width = "250px";
             document.getElementById("map")!.style.marginLeft = "250px";
         }
       }
       
     const closeNav=(id: string)=> {
-          if(id=="leftdrawer"){
+          if(id==="leftdrawer"){
             document.getElementById(id)!.style.width = "0";
             document.getElementById("map")!.style.marginLeft = "0";
           }

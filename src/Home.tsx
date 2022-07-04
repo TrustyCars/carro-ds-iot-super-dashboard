@@ -36,7 +36,7 @@ const getCurrentDashboard = (search: string) => {
     return DEFAULT_DASHBOARD;
   }
   else return (
-    splitQueryString(search)[splitQueryString(search).findIndex(v => v.slice(0, 9) == 'dashboard')].slice(10)
+    splitQueryString(search)[splitQueryString(search).findIndex(v => v.slice(0, 9) === 'dashboard')].slice(10)
   );
 };
 
@@ -52,7 +52,7 @@ const Home: React.FC = () => {
               value={dashboard.current}
               onChange={(event: SelectChangeEvent) => {
                 const qs_arr = window.location.search.slice(1).split('&');
-                qs_arr[qs_arr.findIndex(v => v.slice(0, 9) == 'dashboard')] = `dashboard=${event.target.value}`;
+                qs_arr[qs_arr.findIndex(v => v.slice(0, 9) === 'dashboard')] = `dashboard=${event.target.value}`;
 
                 window.location.href = `/?${qs_arr.join('&')}`;
 
@@ -96,10 +96,10 @@ const Home: React.FC = () => {
         <BrowserRouter>
           <Routes>
             <Route path='/' element={getHomeElement(dashboard.current)} />
-            { dashboard.current == DASHBOARDS.FLEET_MANAGEMENT &&
+            { dashboard.current === DASHBOARDS.FLEET_MANAGEMENT &&
               <Route path='devices' element={<DeviceList />} />
             }
-            { dashboard.current == DASHBOARDS.FLEET_MANAGEMENT &&
+            { dashboard.current === DASHBOARDS.FLEET_MANAGEMENT &&
               <Route path='device/:id' element={<Device />} />
             }
           </Routes>
