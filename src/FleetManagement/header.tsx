@@ -48,7 +48,7 @@ function Header(){
         <Link
           style={{ textDecoration: 'none', textAlign: 'center' }}
           to={`/devices${window.location.search}`}
-           onClick={() => closeNav("leftdrawer")}
+          onClick={() => closeNav("leftdrawer")}
         >
           <p>Devices</p>
         </Link>
