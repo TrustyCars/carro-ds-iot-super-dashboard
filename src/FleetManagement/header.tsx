@@ -10,14 +10,14 @@ import "./header.css"
 function Header(){
 
     const openNav=(id: string)=> {
-        if(id=="leftdrawer"){
+        if(id==="leftdrawer"){
             document.getElementById(id)!.style.width = "250px";
             document.getElementById("map")!.style.marginLeft = "250px";
         }
       }
       
     const closeNav=(id: string)=> {
-          if(id=="leftdrawer"){
+          if(id==="leftdrawer"){
             document.getElementById(id)!.style.width = "0";
             document.getElementById("map")!.style.marginLeft = "0";
           }
@@ -48,7 +48,7 @@ function Header(){
         <Link
           style={{ textDecoration: 'none', textAlign: 'center' }}
           to={`/devices${window.location.search}`}
-           onClick={() => closeNav("leftdrawer")}
+          onClick={() => closeNav("leftdrawer")}
         >
           <p>Devices</p>
         </Link>
