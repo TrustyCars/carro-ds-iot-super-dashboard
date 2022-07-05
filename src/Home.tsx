@@ -50,7 +50,7 @@ const getCurrentDashboard = (search: string, defaultDashboard: string) => {
     return defaultDashboard
   }
   else return (
-    splitQueryString(search)[splitQueryString(search).findIndex(v => v.slice(0, 9) == 'dashboard')].slice(10)
+    splitQueryString(search)[splitQueryString(search).findIndex(v => v.slice(0, 9) === 'dashboard')].slice(10)
   );
 };
 
