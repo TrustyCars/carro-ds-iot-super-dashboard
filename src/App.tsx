@@ -3,8 +3,12 @@ import React from 'react';
 import Home from './Home';
 import Login from './Login';
 
+// the number of available dashboards. this value is used to pad the
+// binary representation of status
+export const STATUS_PLACES = 5;
 export const JwtTokenContext: React.Context<{
   token?: string;
+  status?: string;
   setToken?: React.Dispatch<React.SetStateAction<string | null>>
 }> = React.createContext({});
 
@@ -32,7 +36,13 @@ function App() {
   if (token != null) {
     axios.defaults.headers.common['authorizationToken'] = token;
     return (
-      <JwtTokenContext.Provider value={{ token, setToken }}>
+      <JwtTokenContext.Provider
+        value={{
+          token,
+          status: JSON.parse(atob(token.split('.')[1])).status.toString(2).padStart(STATUS_PLACES, '0'),
+          setToken
+        }}
+      >
         <Home />
       </JwtTokenContext.Provider>
     );
