@@ -1,143 +1,31 @@
 import React from 'react';
-import { Autocomplete, Button, Card, CardActions, CardContent, TextField, Typography } from '@mui/material';
-import Select from 'react-select'
-import { COLORS } from './constants';
+import axios from 'axios';
+import { Card, CardContent, Chip, CircularProgress, TextField, Typography } from '@mui/material';
+import { ENDPOINT_HOME, ENDPOINT_PATHS } from './constants';
 import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
 
-const getButtonColor = (currentKeypressStatus: string) => {
-  if (currentKeypressStatus == 'locked') return '#8BBD56';
-  else return '#DD4F40';
+type KeypressDeviceProps = {
+  DEVICE_ID: string;
+  CARPLATE_NO: string;
+  PERMISSION: string;
+  EXPIRY_DATE: number | null;
+  KEYPRESS: number;
 };
 
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 },
-  {
-    title: 'The Lord of the Rings: The Return of the King',
-    year: 2003,
-  },
-  { title: 'The Good, the Bad and the Ugly', year: 1966 },
-  { title: 'Fight Club', year: 1999 },
-  {
-    title: 'The Lord of the Rings: The Fellowship of the Ring',
-    year: 2001,
-  },
-  {
-    title: 'Star Wars: Episode V - The Empire Strikes Back',
-    year: 1980,
-  },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  {
-    title: 'The Lord of the Rings: The Two Towers',
-    year: 2002,
-  },
-  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-  { title: 'Goodfellas', year: 1990 },
-  { title: 'The Matrix', year: 1999 },
-  { title: 'Seven Samurai', year: 1954 },
-  {
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: 1977,
-  },
-  { title: 'City of God', year: 2002 },
-  { title: 'Se7en', year: 1995 },
-  { title: 'The Silence of the Lambs', year: 1991 },
-  { title: "It's a Wonderful Life", year: 1946 },
-  { title: 'Life Is Beautiful', year: 1997 },
-  { title: 'The Usual Suspects', year: 1995 },
-  { title: 'Léon: The Professional', year: 1994 },
-  { title: 'Spirited Away', year: 2001 },
-  { title: 'Saving Private Ryan', year: 1998 },
-  { title: 'Once Upon a Time in the West', year: 1968 },
-  { title: 'American History X', year: 1998 },
-  { title: 'Interstellar', year: 2014 },
-  { title: 'Casablanca', year: 1942 },
-  { title: 'City Lights', year: 1931 },
-  { title: 'Psycho', year: 1960 },
-  { title: 'The Green Mile', year: 1999 },
-  { title: 'The Intouchables', year: 2011 },
-  { title: 'Modern Times', year: 1936 },
-  { title: 'Raiders of the Lost Ark', year: 1981 },
-  { title: 'Rear Window', year: 1954 },
-  { title: 'The Pianist', year: 2002 },
-  { title: 'The Departed', year: 2006 },
-  { title: 'Terminator 2: Judgment Day', year: 1991 },
-  { title: 'Back to the Future', year: 1985 },
-  { title: 'Whiplash', year: 2014 },
-  { title: 'Gladiator', year: 2000 },
-  { title: 'Memento', year: 2000 },
-  { title: 'The Prestige', year: 2006 },
-  { title: 'The Lion King', year: 1994 },
-  { title: 'Apocalypse Now', year: 1979 },
-  { title: 'Alien', year: 1979 },
-  { title: 'Sunset Boulevard', year: 1950 },
-  {
-    title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
-    year: 1964,
-  },
-  { title: 'The Great Dictator', year: 1940 },
-  { title: 'Cinema Paradiso', year: 1988 },
-  { title: 'The Lives of Others', year: 2006 },
-  { title: 'Grave of the Fireflies', year: 1988 },
-  { title: 'Paths of Glory', year: 1957 },
-  { title: 'Django Unchained', year: 2012 },
-  { title: 'The Shining', year: 1980 },
-  { title: 'WALL·E', year: 2008 },
-  { title: 'American Beauty', year: 1999 },
-  { title: 'The Dark Knight Rises', year: 2012 },
-  { title: 'Princess Mononoke', year: 1997 },
-  { title: 'Aliens', year: 1986 },
-  { title: 'Oldboy', year: 2003 },
-  { title: 'Once Upon a Time in America', year: 1984 },
-  { title: 'Witness for the Prosecution', year: 1957 },
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  {
-    title: 'Star Wars: Episode VI - Return of the Jedi',
-    year: 1983,
-  },
-  { title: 'Reservoir Dogs', year: 1992 },
-  { title: 'Braveheart', year: 1995 },
-  { title: 'M', year: 1931 },
-  { title: 'Requiem for a Dream', year: 2000 },
-  { title: 'Amélie', year: 2001 },
-  { title: 'A Clockwork Orange', year: 1971 },
-  { title: 'Like Stars on Earth', year: 2007 },
-  { title: 'Taxi Driver', year: 1976 },
-  { title: 'Lawrence of Arabia', year: 1962 },
-  { title: 'Double Indemnity', year: 1944 },
-  {
-    title: 'Eternal Sunshine of the Spotless Mind',
-    year: 2004,
-  },
-  { title: 'Amadeus', year: 1984 },
-  { title: 'To Kill a Mockingbird', year: 1962 },
-  { title: 'Toy Story 3', year: 2010 },
-  { title: 'Logan', year: 2017 },
-  { title: 'Full Metal Jacket', year: 1987 },
-  { title: 'Dangal', year: 2016 },
-  { title: 'The Sting', year: 1973 },
-  { title: '2001: A Space Odyssey', year: 1968 },
-  { title: "Singin' in the Rain", year: 1952 },
-  { title: 'Toy Story', year: 1995 },
-  { title: 'Bicycle Thieves', year: 1948 },
-  { title: 'The Kid', year: 1921 },
-  { title: 'Inglourious Basterds', year: 2009 },
-  { title: 'Snatch', year: 2000 },
-  { title: '3 Idiots', year: 2009 },
-  { title: 'Monty Python and the Holy Grail', year: 1975 },
-];
-
 const Keypress: React.FC = () => {
-  const [keypressStatus, setKeypressStatus] = React.useState('locked');
+  const [devices, setDevices] = React.useState<KeypressDeviceProps[]>([]);
+  const [filteredDevices, setFilteredDevices] = React.useState<KeypressDeviceProps[]>([]);
+
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    axios.get(ENDPOINT_HOME.KEYPRESS_STAGING + ENDPOINT_PATHS.GET_USER_DEVICES)
+      .then(res => {
+        setDevices(res.data.body);
+        setFilteredDevices(res.data.body);
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <div
@@ -151,8 +39,11 @@ const Keypress: React.FC = () => {
       <div
         style={{
           width: '100%',
-          height: 'fit-content',
+          height: '100%',
           padding: '1.5rem 2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
         }}
       >
         <div
@@ -162,110 +53,58 @@ const Keypress: React.FC = () => {
             color: '#999',
           }}
         >Search for a car</div>
-        <Autocomplete
-          id="free-solo-demo"
-          freeSolo
-          options={top100Films.map((option) => option.title)}
-          renderInput={(params) => <TextField {...params} label="Carplate Number" />}
+        <TextField
+          label="Carplate Number"
+          variant="outlined"
+          sx={{
+            width: '100%',
+          }}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setFilteredDevices(devices.filter(d => {
+              return (d.CARPLATE_NO.toLowerCase().includes(event.target.value.toLowerCase()));
+            }));
+          }}
         />
-        <Button sx={{ marginTop: '0.5rem', width: '100%', backgroundColor: COLORS.PRIMARY, marginBottom: '4rem' }} variant="contained">Search</Button>
-
         <div
           style={{
             marginBottom: '0.5rem',
+            marginTop: '3rem',
             marginLeft: '0.1rem',
             color: '#999',
           }}
         >Search results</div>
-        <div style={{ height: '30vh', overflowY: 'scroll' }}>
-          <Card variant="outlined">
-            <CardContent sx={{ paddingBottom: '16px !important' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <div>
-                  <Typography variant="h6" component="div">
-                    Carplate: SG88X
-                  </Typography>
-                  <Typography>
-                    Keypress: 5
-                  </Typography>
-                </div>
-                <LockOpenRoundedIcon sx={{ fill: '#8BBD56', marginRight: '0.5rem' }} fontSize='large' />
-              </div>
-            </CardContent>
-          </Card>
-          <Card variant="outlined" sx={{ marginTop: '1rem' }}>
-            <CardContent sx={{ paddingBottom: '16px !important' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <div>
-                  <Typography variant="h6" component="div">
-                    Carplate: SG882G
-                  </Typography>
-                  <Typography>
-                    Keypress: 2
-                  </Typography>
-                </div>
-                <LockOpenRoundedIcon sx={{ fill: '#8BBD56', marginRight: '0.5rem' }} fontSize='large' />
-              </div>
-            </CardContent>
-          </Card>
-          <Card variant="outlined" sx={{ marginTop: '1rem' }}>
-            <CardContent sx={{ paddingBottom: '16px !important' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <div>
-                  <Typography variant="h6" component="div">
-                    Carplate: SG88L
-                  </Typography>
-                  <Typography>
-                    Keypress: 2
-                  </Typography>
-                </div>
-                <LockOpenRoundedIcon sx={{ fill: '#8BBD56', marginRight: '0.5rem' }} fontSize='large' />
-              </div>
-            </CardContent>
-          </Card>
+        <div style={{ height: '50vh', overflowY: 'scroll' }}>
+          {isLoading
+            ? <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><CircularProgress /></div>
+            : (filteredDevices.length
+                ? filteredDevices.map(d => (
+                    <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
+                      <CardContent sx={{ paddingBottom: '16px !important', paddingLeft: '24px' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <div>
+                            <Chip color='default' label={d.PERMISSION} sx={{ textTransform: 'lowercase', fontSize: '0.8rem', marginBottom: '0.3rem' }} />
+                            <Typography variant="h5" component="div">
+                              {d.CARPLATE_NO}
+                            </Typography>
+                            <Typography>
+                              Keypress: <span style={{ fontWeight: 'bold' }}>{d.KEYPRESS}</span>
+                            </Typography>
+                          </div>
+                          <LockOpenRoundedIcon sx={{ fill: '#8BBD56', marginRight: '0.5rem' }} fontSize='large' />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                : <div style={{ textAlign: 'center', marginTop: '3rem' }}>Couldn't find any results 🧐<br />Please try again.</div>
+            )
+          }
         </div>
-        {/* <div style={{ marginBottom: '0.5rem' }}>
-          Your Keypress is currently <span style={{ fontWeight: 600 }}>{keypressStatus}</span>.
-        </div>
-        <Button
-          variant='contained'
-          sx={{
-            width: '100%',
-            minHeight: '2.8rem',
-            textTransform: 'none',
-            backgroundColor: getButtonColor(keypressStatus),
-            ":hover": { backgroundColor: getButtonColor(keypressStatus) },
-            ":focus": { backgroundColor: getButtonColor(keypressStatus) },
-          }}
-        >
-          {keypressStatus == 'locked' ? 'Unlock' : 'Lock'}
-        </Button>
-        <Button
-          variant='contained'
-          onClick={() => {
-            navigator.bluetooth.requestLEScan({ acceptAllAdvertisements: true });
-            navigator.bluetooth.addEventListener('advertisementreceived', ev => {
-              console.log(ev);
-            });
-          }}>temp: Scan for devices</Button> */}
       </div>
     </div>
   );

@@ -4,8 +4,9 @@ const InvalidDashboard: React.FC = () => {
   return (
     <div
       style={{
-        width: '100vw',
+        width: '94vw',
         height: '90vh',
+        margin: '0 3vw',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',

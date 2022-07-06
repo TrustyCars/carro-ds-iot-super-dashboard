@@ -19,6 +19,7 @@ export const COUNTRY_RADIUS = {
 export const ENDPOINT_HOME = {
   PRODUCTION: 'https://xkh3ebmhgk.execute-api.ap-southeast-1.amazonaws.com/api',
   STAGING: 'https://xkh3ebmhgk.execute-api.ap-southeast-1.amazonaws.com/staging',
+  KEYPRESS_STAGING: 'https://nefvok4p73.execute-api.ap-southeast-1.amazonaws.com/staging',
 };
 export const ENDPOINT_PATHS = {
   LOGIN: '/user/login',
@@ -32,6 +33,9 @@ export const ENDPOINT_PATHS = {
   DEVICE_VOLTAGE: '/device/get_voltage',
   DEVICE_TRIPS: '/device/trip',
   LATEST_POSITIONS: '/devices/positions',
+
+  // Smart Keypress
+  GET_USER_DEVICES: '/devices/all',
 };
 
 export const PID_MAPPINGS: { [key: string]: string } = {
