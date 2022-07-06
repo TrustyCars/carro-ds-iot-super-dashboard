@@ -67,10 +67,6 @@ const Home: React.FC = () => {
   }[]>([]);
 
   React.useEffect(() => {
-    axios.defaults.headers.common['authorizationToken'] = token || '';
-  }, []);
-
-  React.useEffect(() => {
     const tempUserDashboards = [];
     if (status) {
       if (parseInt(status[STATUS_PLACES-1])) {
