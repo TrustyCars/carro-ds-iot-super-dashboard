@@ -8,9 +8,12 @@ import {
   TableContainer,
   TableHead,
   TableRow } from '@mui/material';
-import { ENDPOINT_HOME, ENDPOINT_PATHS } from './constants';
+import { ENDPOINT_HOME, ENDPOINT_PATHS } from '../constants';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const VoltageLevel: React.FC = () => {
+  const { width } = useWindowDimensions();
+
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
@@ -23,7 +26,7 @@ const VoltageLevel: React.FC = () => {
   return (
     <div
       style={{
-        width: '40vw',
+        width: (width > 1200 ? '40vw' : '90vw'),
         paddingTop: '2rem',
         paddingLeft: '2rem',
       }}
