@@ -78,7 +78,8 @@ const SharingModal: React.FC<SharingModalProps> = ({
   React.useEffect(() => {
     if (permissions.length && users.length) {
       const permissionUserIds = permissions.map((p: PermissionsProps) => p.USER_ID)
-      setFilteredUsers(users.filter(u => permissionUserIds.findIndex((p: string) => p == u.USER_ID) == -1).map(u => ({ ...u, label: u.USER_ID })));
+      setFilteredUsers(
+        users.filter(u => permissionUserIds.findIndex((p: string) => p === u.USER_ID) === -1).map(u => ({ ...u, label: u.USER_ID })));
       setAutocompleteKey((new Date()).getTime());
     }
   }, [permissions]);
@@ -195,7 +196,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         }
                       ]);
 
-                      setFilteredUsers(filteredUsers.filter(u => u.USER_ID != newValue.USER_ID));
+                      setFilteredUsers(filteredUsers.filter(u => u.USER_ID !== newValue.USER_ID));
 
                       setAutocompleteInputValue('');
                       setAutocompleteKey((new Date()).getTime());

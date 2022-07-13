@@ -28,7 +28,7 @@ const SharingSnackbar: React.FC<SharingSnackbarProps> = ({
       onClose={handleCloseSnackbar}
     >
       <Alert onClose={handleCloseSnackbar} severity={status} sx={{ width: '100%' }}>
-        {status == 'success'
+        {status === 'success'
           ? 'Permissions update success!'
           : `Permissions update failed. ${errorMessage}`}
       </Alert>
