@@ -72,7 +72,7 @@ const Home: React.FC = () => {
       if (parseInt(status[STATUS_PLACES-1])) {
         tempUserDashboards.push({
           dashboard: DASHBOARDS.FLEET_MANAGEMENT,
-          element:(<MenuItem value={DASHBOARDS.FLEET_MANAGEMENT}>
+          element:(<MenuItem key={DASHBOARDS.FLEET_MANAGEMENT} value={DASHBOARDS.FLEET_MANAGEMENT}>
                       Fleet Management
                    </MenuItem>)
         });
@@ -81,7 +81,7 @@ const Home: React.FC = () => {
       if (parseInt(status[STATUS_PLACES-2])) {
         tempUserDashboards.push({
           dashboard: DASHBOARDS.KEYPRESS,
-          element: (<MenuItem value={DASHBOARDS.KEYPRESS}>
+          element: (<MenuItem key={DASHBOARDS.KEYPRESS} value={DASHBOARDS.KEYPRESS}>
                       Keypress
                     </MenuItem>)
         });
@@ -90,7 +90,7 @@ const Home: React.FC = () => {
       if (parseInt(status[STATUS_PLACES-3])) {
         tempUserDashboards.push({
           dashboard: DASHBOARDS.CARRO_EVERYWHERE,
-          element: (<MenuItem value={DASHBOARDS.CARRO_EVERYWHERE}>
+          element: (<MenuItem key={DASHBOARDS.CARRO_EVERYWHERE} value={DASHBOARDS.CARRO_EVERYWHERE}>
                       Carro Everywhere
                     </MenuItem>)
         });
@@ -161,7 +161,9 @@ const Home: React.FC = () => {
         </AppBar>
         <div
           style={{
+            boxSizing: 'border-box',
             minWidth: '100vw',
+            minHeight: '100vh',
             paddingTop: '4rem',
           }}
         >
