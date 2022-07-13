@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import { Card, CardContent, Chip, CircularProgress, TextField, Typography } from '@mui/material';
+import { CircularProgress, Divider, Stack, TextField } from '@mui/material';
 import { ENDPOINT_HOME, ENDPOINT_PATHS } from './constants';
-import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
+import useWindowDimensions from './hooks/useWindowDimensions';
+import VehicleListItem from './SmartKeypress/VehicleListItem';
 
-type KeypressDeviceProps = {
+export type KeypressDeviceProps = {
   DEVICE_ID: string;
   CARPLATE_NO: string;
   PERMISSION: string;
@@ -12,11 +13,21 @@ type KeypressDeviceProps = {
   KEYPRESS: number;
 };
 
+export type UserProps = {
+  USER_ID: string;
+  FIRST_NAME: string;
+  LAST_NAME: string;
+};
+
 const Keypress: React.FC = () => {
+  const { width } = useWindowDimensions();
+
   const [devices, setDevices] = React.useState<KeypressDeviceProps[]>([]);
   const [filteredDevices, setFilteredDevices] = React.useState<KeypressDeviceProps[]>([]);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  const [users, setUsers] = React.useState<UserProps[]>([]);
 
   React.useEffect(() => {
     axios.get(ENDPOINT_HOME.KEYPRESS_STAGING + ENDPOINT_PATHS.GET_USER_DEVICES)
@@ -25,25 +36,31 @@ const Keypress: React.FC = () => {
         setFilteredDevices(res.data.body);
         setIsLoading(false);
       });
+
+    axios.get(ENDPOINT_HOME.STAGING + ENDPOINT_PATHS.GET_USERS, {
+      params: { status: 2 }
+    }).then(res => {
+      setUsers(res.data.body);
+    });
   }, []);
 
   return (
     <div
       style={{
+        boxSizing: 'border-box',
         width: '100vw',
-        height: '90vh',
         display: 'flex',
         alignItems: 'center',
+        padding: (width < 768 ? '0' : '0 15%'),
       }}
     >
       <div
         style={{
           width: '100%',
           height: '100%',
-          padding: '1.5rem 2rem',
+          margin: '3rem 1rem 0 1rem',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
         }}
       >
         <div
@@ -73,37 +90,22 @@ const Keypress: React.FC = () => {
             color: '#999',
           }}
         >Search results</div>
-        <div style={{ height: '50vh', overflowY: 'scroll' }}>
-          {isLoading
-            ? <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><CircularProgress /></div>
-            : (filteredDevices.length
-                ? filteredDevices.map(d => (
-                    <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
-                      <CardContent sx={{ paddingBottom: '16px !important', paddingLeft: '24px' }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <div>
-                            <Chip color='default' label={d.PERMISSION} sx={{ textTransform: 'lowercase', fontSize: '0.8rem', marginBottom: '0.3rem' }} />
-                            <Typography variant="h5" component="div">
-                              {d.CARPLATE_NO}
-                            </Typography>
-                            <Typography>
-                              Keypress: <span style={{ fontWeight: 'bold' }}>{d.KEYPRESS}</span>
-                            </Typography>
-                          </div>
-                          <LockOpenRoundedIcon sx={{ fill: '#8BBD56', marginRight: '0.5rem' }} fontSize='large' />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                : <div style={{ textAlign: 'center', marginTop: '3rem' }}>Couldn't find any results 🧐<br />Please try again.</div>
-            )
-          }
+        <div style={{ flexGrow: 1, height: '60vh', overflowY: 'scroll' }}>
+          <Stack
+            spacing={2}
+            divider={<Divider orientation="horizontal" flexItem />}
+            sx={{ marginTop: '0.5rem' }}
+          >
+            {isLoading
+              ? <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><CircularProgress /></div>
+              : (filteredDevices.length
+                  ? filteredDevices.map((d, i) => (
+                      <VehicleListItem key={i} device={d} users={users} />
+                    ))
+                  : <div style={{ textAlign: 'center', marginTop: '3rem' }}>Couldn't find any results 🧐<br />Please try again.</div>
+              )
+            }
+          </Stack>
         </div>
       </div>
     </div>
