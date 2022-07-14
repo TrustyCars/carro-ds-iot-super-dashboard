@@ -60,6 +60,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
   const [snackbarInfo, setSnackbarInfo] = React.useState<{ status: AlertColor; errorMessage?: string; }>({ status: 'success' });
 
   const [permissions, setPermissions] = React.useState<PermissionsProps[]>([]);
+  const [permissionsToDelete, setPermissionsToDelete] = React.useState<PermissionsProps[]>([]);
 
   const [filteredUsers, setFilteredUsers] = React.useState<(UserProps & { label: string })[]>([]);
   const [newUsers, setNewUsers] = React.useState<(UserProps & PermissionsProps)[]>([]);
@@ -71,7 +72,11 @@ const SharingModal: React.FC<SharingModalProps> = ({
     axios.get(ENDPOINT_HOME.KEYPRESS_STAGING + ENDPOINT_PATHS.GET_PERMISSIONS, {
       params: { device_id: device.DEVICE_ID },
     }).then(res => {
-      setPermissions(res.data.body);
+      // Puts the current user at the top of the permissions list
+      setPermissions([
+        res.data.body.find((p: PermissionsProps) => p.USER_ID === userId),
+        ...res.data.body.filter((p: PermissionsProps) => p.USER_ID !== userId),
+      ]);
       setIsLoading(false);
     }).catch(err => {
       console.error(err);
@@ -107,10 +112,16 @@ const SharingModal: React.FC<SharingModalProps> = ({
                     ? permissions.map((p, i) => (
                         <PermissionItem
                           key={i}
+                          clearable
                           permission={p}
+                          disable={p.USER_ID === userId}
                           isCurrUser={p.USER_ID === userId}
                           isUserOwner={device.PERMISSION === 'OWNER'}
                           maxExpiryDate={device.EXPIRY_DATE}
+                          onClear={(permission: PermissionsProps) => {
+                            setPermissionsToDelete([...permissionsToDelete, permission]);
+                            setPermissions(permissions.filter(p => p.USER_ID !== permission.USER_ID));
+                          }}
                           onChangePermissions={(event: SelectChangeEvent) => {
                             setPermissions(permissions.map(perm => {
                               if (perm.USER_ID === p.USER_ID) {
@@ -136,6 +147,34 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         />
                       ))
                     : <div>Looks like nobody has permissions to this vehicle.</div>}
+                  {permissionsToDelete.length &&
+                    <>
+                      <div
+                        style={{
+                          marginBottom: '0.4rem',
+                          marginTop: '1rem',
+                          marginLeft: '0.1rem',
+                          color: COLORS.GREY,
+                        }}
+                      >Users below will be removed</div>
+                      {permissionsToDelete.map((p, i) => (
+                        <PermissionItem
+                          key={i}
+                          compact
+                          clearable
+                          permission={p}
+                          disable
+                          isCurrUser={p.USER_ID === userId}
+                          isUserOwner={device.PERMISSION === 'OWNER'}
+                          maxExpiryDate={device.EXPIRY_DATE}
+                          onClear={(permission: PermissionsProps) => {
+                            setPermissionsToDelete(permissionsToDelete.filter(p => p.USER_ID !== permission.USER_ID));
+                            setPermissions([...permissions, permission]);
+                          }}
+                        />
+                      ))}
+                    </>
+                  }
                 </Stack>
                 <div
                   style={{
@@ -151,6 +190,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                       key={i}
                       clearable
                       permission={u}
+                      disable={u.USER_ID === userId}
                       isCurrUser={u.USER_ID === userId}
                       isUserOwner={device.PERMISSION === 'OWNER'}
                       maxExpiryDate={device.EXPIRY_DATE}
@@ -176,8 +216,8 @@ const SharingModal: React.FC<SharingModalProps> = ({
                           else return new_u;
                         }));
                       }}
-                      onClear={(user_id: string) => {
-                        setNewUsers(newUsers.filter(new_u => (user_id !== new_u.USER_ID)));
+                      onClear={(permission: PermissionsProps) => {
+                        setNewUsers(newUsers.filter(new_u => (permission.USER_ID !== new_u.USER_ID)));
                       }}
                     />
                   ))}
@@ -216,6 +256,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                     const payload = [
                       ...(permissions.map(p => ({ USER_ID: p.USER_ID, PERMISSION: p.PERMISSION, EXPIRY_DATE: p.EXPIRY_DATE }))),
                       ...(newUsers.map(u => ({ USER_ID: u.USER_ID, PERMISSION: u.PERMISSION, EXPIRY_DATE: u.EXPIRY_DATE }))),
+                      ...(permissionsToDelete.map(p => ({ USER_ID: p.USER_ID, PERMISSION: 'EXPIRED', EXPIRY_DATE: null }))),
                     ];
 
                     axios.post(ENDPOINT_HOME.KEYPRESS_STAGING + ENDPOINT_PATHS.UPDATE_PERMISSIONS,
@@ -231,6 +272,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         setIsModalOpen(false);
 
                         setPermissions([...permissions, ...newUsers]);
+                        setPermissionsToDelete([]);
                         setNewUsers([]);
                       }
                       else if (res.data.statusCode === 400) {

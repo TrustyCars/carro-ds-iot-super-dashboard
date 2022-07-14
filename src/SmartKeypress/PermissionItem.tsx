@@ -8,10 +8,12 @@ import { PermissionsProps } from './SharingModal';
 import { COLORS } from '../constants';
 
 type PermissionItemProps = {
-  clearable?: boolean;
-  onChangeExpiryDate: (newDate: Date | null) => void;
-  onChangePermissions: (event: SelectChangeEvent) => void;
-  onClear?: (user_id: string) => void;
+  compact?: boolean; // if true, will only display user_id
+  clearable?: boolean; // if true, will display an 'x' icon to the left of the user_id
+  disable?: boolean;
+  onChangeExpiryDate?: (newDate: Date | null) => void;
+  onChangePermissions?: (event: SelectChangeEvent) => void;
+  onClear?: (permission: PermissionsProps) => void;
   permission: PermissionsProps;
   isCurrUser: boolean;
   isUserOwner: boolean;
@@ -19,7 +21,9 @@ type PermissionItemProps = {
 };
 
 const PermissionItem: React.FC<PermissionItemProps> = ({
+  compact = false,
   clearable = false,
+  disable = false,
   onChangeExpiryDate,
   onChangePermissions,
   onClear,
@@ -39,12 +43,12 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
         alignItems: 'center',
       }}
     >
-      {clearable &&
+      {clearable && !isCurrUser &&
         <HighlightOffRoundedIcon
           sx={{
-            color: COLORS.GREY,
+            color: COLORS.RED,
           }}
-          onClick={() => onClear && onClear(permission.USER_ID)}
+          onClick={() => onClear && onClear(permission)}
         />
       }
       <div
@@ -53,60 +57,62 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
           marginLeft: (clearable ? '0.5rem' : '0'),
         }}
       >{permission.USER_ID}</div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexDirection: 'column',
-        }}
-      >
-        <FormControl
-          variant='standard'
-          sx={{ marginBottom: '1.2rem' }}
+      {!compact &&
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'column',
+          }}
         >
-          <Select
-            disabled={isCurrUser}
-            value={permission.PERMISSION}
-            onChange={onChangePermissions}
+          <FormControl
+            variant='standard'
           >
-            <MenuItem value='DRIVER'>Driver</MenuItem>
-            <MenuItem value='MANAGER'>Manager</MenuItem>
-            {isUserOwner &&
-              <MenuItem value='OWNER'>Owner</MenuItem>
-            }
-          </Select>
-        </FormControl>
-        {permission.PERMISSION != 'OWNER' &&
-          <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DatePicker
-              label="Expiry date*"
-              value={expiryDate}
-              disabled={isCurrUser}
-              disablePast
-              shouldDisableDate={(day: Date) => {
-                if (maxExpiryDate == null) return false;
-                else return (day.valueOf() / 1000 > maxExpiryDate);
-              }}
-              onChange={(newValue) => {
-                setExpiryDate(newValue);
-                onChangeExpiryDate(newValue);
-              }}
-              renderInput={(params) => 
-                <TextField
-                  {...params}
-                  sx={{
-                    'div': { fontSize: '0.85rem' },
-                    'label': { fontSize: '0.85rem', lineHeight: '1rem' },
-                    'input': {
-                      height: '1rem',
-                      padding: '0.8rem 0.6rem'
-                    },
-                  }}
-                />}
-            />
-          </LocalizationProvider>
-        }
-      </div>
+            <Select
+              disabled={disable}
+              value={permission.PERMISSION}
+              onChange={(event: SelectChangeEvent) => onChangePermissions && onChangePermissions(event)}
+            >
+              <MenuItem value='DRIVER'>Driver</MenuItem>
+              <MenuItem value='MANAGER'>Manager</MenuItem>
+              {isUserOwner &&
+                <MenuItem value='OWNER'>Owner</MenuItem>
+              }
+            </Select>
+          </FormControl>
+          {permission.PERMISSION != 'OWNER' &&
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DatePicker
+                label="Expiry date*"
+                value={expiryDate}
+                disabled={disable}
+                disablePast
+                shouldDisableDate={(day: Date) => {
+                  if (maxExpiryDate == null) return false;
+                  else return (day.valueOf() / 1000 > maxExpiryDate);
+                }}
+                onChange={(newValue) => {
+                  setExpiryDate(newValue);
+                  onChangeExpiryDate && onChangeExpiryDate(newValue);
+                }}
+                renderInput={(params) => 
+                  <TextField
+                    {...params}
+                    sx={{
+                      marginTop: '1.2rem',
+                      'div': { fontSize: '0.85rem' },
+                      'label': { fontSize: '0.85rem', lineHeight: '1rem' },
+                      'input': {
+                        height: '1rem',
+                        padding: '0.8rem 0.6rem'
+                      },
+                    }}
+                  />}
+              />
+            </LocalizationProvider>
+          }
+        </div>
+      }
     </div>
   );
 };

@@ -6,6 +6,7 @@ export const COLORS = {
   GREY: '#999999',
   GREEN: '#8bbe55',
   LIGHTGREEN: '#def6c5',
+  RED: '#cf4444',
 };
 
 export const COUNTRY_RADIUS = {
