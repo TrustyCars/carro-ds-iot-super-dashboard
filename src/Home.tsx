@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import {
   AppBar,
   CircularProgress,
@@ -55,7 +54,7 @@ const getCurrentDashboard = (search: string, defaultDashboard: string) => {
 };
 
 const Home: React.FC = () => {
-  const { token, status } = React.useContext(JwtTokenContext);
+  const { status } = React.useContext(JwtTokenContext);
 
   const dashboard = React.useRef<string>('');
 

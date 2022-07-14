@@ -7,12 +7,6 @@ import { KeypressDeviceProps, UserProps } from '../Keypress';
 import strftime from '../utils/strftime';
 import SharingModal from './SharingModal';
 
-type PermissionsProps = {
-  USER_ID: string;
-  PERMISSION: string;
-  EXPIRY_DATE: number | null;
-};
-
 type VehicleListItemProps = {
   device: KeypressDeviceProps;
   users: UserProps[];

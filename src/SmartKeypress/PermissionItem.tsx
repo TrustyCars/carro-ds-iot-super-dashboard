@@ -80,7 +80,7 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
               }
             </Select>
           </FormControl>
-          {permission.PERMISSION != 'OWNER' &&
+          {permission.PERMISSION !== 'OWNER' &&
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 label="Expiry date*"
