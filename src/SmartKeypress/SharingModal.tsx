@@ -4,6 +4,7 @@ import {
   AlertColor,
   Autocomplete,
   Box,
+  Button,
   CircularProgress,
   Divider,
   Modal,
@@ -30,6 +31,10 @@ const modalStyle = {
   boxShadow: '0px 11px 10px -7px rgb(0 0 0 / 20%), 0px 20px 38px 3px rgb(0 0 0 / 14%), 0px 6px 46px 8px rgb(0 0 0 / 12%)',
   py: 3,
   px: 3,
+};
+
+const stringifyPermissions = (arr: PermissionsProps[]) => {
+  return arr.map(r => `${r.USER_ID}_${r.PERMISSION}_${r.EXPIRY_DATE}`).sort().join(',');
 };
 
 export type PermissionsProps = {
@@ -59,6 +64,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
   const [isSnackbarOpen, setIsSnackbarOpen] = React.useState<boolean>(false);
   const [snackbarInfo, setSnackbarInfo] = React.useState<{ status: AlertColor; errorMessage?: string; }>({ status: 'success' });
 
+  const [originalPermissions, setOriginalPermissions] = React.useState<PermissionsProps[]>([]);
   const [permissions, setPermissions] = React.useState<PermissionsProps[]>([]);
   const [permissionsToDelete, setPermissionsToDelete] = React.useState<PermissionsProps[]>([]);
 
@@ -68,15 +74,20 @@ const SharingModal: React.FC<SharingModalProps> = ({
   const [autocompleteKey, setAutocompleteKey] = React.useState<number>(0);
   const [autocompleteInputValue, setAutocompleteInputValue] = React.useState<string>('');
 
+  const [edited, setEdited] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     axios.get(ENDPOINT_HOME.KEYPRESS_STAGING + ENDPOINT_PATHS.GET_PERMISSIONS, {
       params: { device_id: device.DEVICE_ID },
     }).then(res => {
       // Puts the current user at the top of the permissions list
-      setPermissions([
+      const sortedRes = [
         res.data.body.find((p: PermissionsProps) => p.USER_ID === userId),
         ...res.data.body.filter((p: PermissionsProps) => p.USER_ID !== userId),
-      ]);
+      ];
+      setPermissions(sortedRes);
+      setOriginalPermissions(sortedRes);
+
       setIsLoading(false);
     }).catch(err => {
       console.error(err);
@@ -92,6 +103,10 @@ const SharingModal: React.FC<SharingModalProps> = ({
     }
   }, [newUsers, permissions]);
 
+  React.useEffect(() => {
+    setEdited(stringifyPermissions(originalPermissions) !== stringifyPermissions([...newUsers, ...permissions, ...permissionsToDelete]));
+  }, [newUsers, permissions, permissionsToDelete]);
+
   return (
     <>
       <Modal
@@ -99,9 +114,32 @@ const SharingModal: React.FC<SharingModalProps> = ({
         onClose={() => setIsModalOpen(false)}
       >
         <Box sx={modalStyle}>
-          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-            Share {device.CARPLATE_NO}
-          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.5rem',
+            }}
+          >
+            <Typography variant="h6" component="h2">
+              Share {device.CARPLATE_NO}
+            </Typography>
+            {edited &&
+              <Button
+                sx={{
+                  textDecoration: 'underline',
+                  textTransform: 'none',
+                  color: COLORS.GREY,
+                }}
+                onClick={() => {
+                  setPermissions(originalPermissions);
+                  setNewUsers([]);
+                  setPermissionsToDelete([]);
+                }}
+              >Reset</Button>
+            }
+          </div>
           {isLoading
             ? <div>
                 <CircularProgress />
