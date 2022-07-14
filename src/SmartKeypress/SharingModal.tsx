@@ -17,6 +17,7 @@ import { COLORS, ENDPOINT_HOME, ENDPOINT_PATHS } from '../constants';
 import { KeypressDeviceProps, UserProps } from '../Keypress';
 import SharingSnackbar from './SharingSnackbar';
 import PermissionItem from './PermissionItem';
+import { JwtTokenContext } from '../App';
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -50,6 +51,8 @@ const SharingModal: React.FC<SharingModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
+  const { userId } = React.useContext(JwtTokenContext);
+
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [isSharingLoading, setIsSharingLoading] = React.useState<boolean>(false);
 
@@ -76,7 +79,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
   }, []);
 
   React.useEffect(() => {
-    if (permissions.length && users.length) {
+    if (users.length) {
       const permissionUserIds = permissions.map((p: PermissionsProps) => p.USER_ID)
       setFilteredUsers(
         users.filter(u => permissionUserIds.findIndex((p: string) => p === u.USER_ID) === -1).map(u => ({ ...u, label: u.USER_ID })));
@@ -105,6 +108,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         <PermissionItem
                           key={i}
                           permission={p}
+                          isCurrUser={p.USER_ID === userId}
                           isUserOwner={device.PERMISSION === 'OWNER'}
                           maxExpiryDate={device.EXPIRY_DATE}
                           onChangePermissions={(event: SelectChangeEvent) => {
@@ -145,7 +149,8 @@ const SharingModal: React.FC<SharingModalProps> = ({
                   {newUsers.map((u, i) => (
                     <PermissionItem
                       key={i}
-                      permission={{ ...u }}
+                      permission={u}
+                      isCurrUser={u.USER_ID === userId}
                       isUserOwner={device.PERMISSION === 'OWNER'}
                       maxExpiryDate={device.EXPIRY_DATE}
                       onChangePermissions={(event: SelectChangeEvent) => {
@@ -156,9 +161,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                               PERMISSION: event.target.value,
                             };
                           }
-                          else {
-                            return new_u;
-                          }
+                          else return new_u;
                         }));
                       }}
                       onChangeExpiryDate={(newDate: Date | null) => {
@@ -169,9 +172,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                               EXPIRY_DATE: (newDate ? newDate.valueOf() / 1000 : null),
                             };
                           }
-                          else {
-                            return new_u;
-                          }
+                          else return new_u;
                         }));
                       }}
                     />

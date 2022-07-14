@@ -9,7 +9,8 @@ export const STATUS_PLACES = 5;
 export const JwtTokenContext: React.Context<{
   token?: string;
   status?: string;
-  setToken?: React.Dispatch<React.SetStateAction<string | null>>
+  setToken?: React.Dispatch<React.SetStateAction<string | null>>;
+  userId?: string;
 }> = React.createContext({});
 
 function App() {
@@ -35,12 +36,14 @@ function App() {
 
   if (token != null) {
     axios.defaults.headers.common = { 'authorizationToken': token };
+    const decodedJwtPayload = JSON.parse(atob(token.split('.')[1]));
     return (
       <JwtTokenContext.Provider
         value={{
           token,
-          status: JSON.parse(atob(token.split('.')[1])).status.toString(2).padStart(STATUS_PLACES, '0'),
-          setToken
+          status: decodedJwtPayload.status.toString(2).padStart(STATUS_PLACES, '0'),
+          setToken,
+          userId: decodedJwtPayload.userid,
         }}
       >
         <Home />

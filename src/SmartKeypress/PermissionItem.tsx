@@ -9,6 +9,7 @@ type PermissionItemProps = {
   onChangeExpiryDate: (newDate: Date | null) => void;
   onChangePermissions: (event: SelectChangeEvent) => void;
   permission: PermissionsProps;
+  isCurrUser: boolean;
   isUserOwner: boolean;
   maxExpiryDate: number | null;
 };
@@ -17,6 +18,7 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
   onChangeExpiryDate,
   onChangePermissions,
   permission,
+  isCurrUser,
   isUserOwner,
   maxExpiryDate,
 }) => {
@@ -44,6 +46,7 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
           sx={{ marginBottom: '1.2rem' }}
         >
           <Select
+            disabled={isCurrUser}
             value={permission.PERMISSION}
             onChange={onChangePermissions}
           >
@@ -59,6 +62,7 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
             <DatePicker
               label="Expiry date*"
               value={expiryDate}
+              disabled={isCurrUser}
               disablePast
               shouldDisableDate={(day: Date) => {
                 if (maxExpiryDate == null) return false;
