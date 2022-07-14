@@ -80,12 +80,12 @@ const SharingModal: React.FC<SharingModalProps> = ({
 
   React.useEffect(() => {
     if (users.length) {
-      const permissionUserIds = permissions.map((p: PermissionsProps) => p.USER_ID)
+      const filterOutIds = [...permissions, ...newUsers].map((p: PermissionsProps) => p.USER_ID)
       setFilteredUsers(
-        users.filter(u => permissionUserIds.findIndex((p: string) => p === u.USER_ID) === -1).map(u => ({ ...u, label: u.USER_ID })));
+        users.filter(u => filterOutIds.findIndex((p: string) => p === u.USER_ID) === -1).map(u => ({ ...u, label: u.USER_ID })));
       setAutocompleteKey((new Date()).getTime());
     }
-  }, [permissions]);
+  }, [newUsers, permissions]);
 
   return (
     <>
@@ -142,13 +142,14 @@ const SharingModal: React.FC<SharingModalProps> = ({
                     marginBottom: '0.4rem',
                     marginTop: '2rem',
                     marginLeft: '0.1rem',
-                    color: '#999',
+                    color: COLORS.GREY,
                   }}
                 >Add a new person</div>
                 <Stack spacing={1} divider={<Divider orientation="horizontal" flexItem />} sx={{ maxHeight: '25vh', overflowY: 'auto' }}>
                   {newUsers.map((u, i) => (
                     <PermissionItem
                       key={i}
+                      clearable
                       permission={u}
                       isCurrUser={u.USER_ID === userId}
                       isUserOwner={device.PERMISSION === 'OWNER'}
@@ -174,6 +175,9 @@ const SharingModal: React.FC<SharingModalProps> = ({
                           }
                           else return new_u;
                         }));
+                      }}
+                      onClear={(user_id: string) => {
+                        setNewUsers(newUsers.filter(new_u => (user_id !== new_u.USER_ID)));
                       }}
                     />
                   ))}
@@ -249,9 +253,9 @@ const SharingModal: React.FC<SharingModalProps> = ({
                     marginTop: '1.5rem',
                     float: 'right',
                     textTransform: 'none',
-                    backgroundColor: COLORS.GREY,
+                    backgroundColor: COLORS.LIGHTGREY,
                     color: COLORS.BLACK,
-                    ":hover": { backgroundColor: COLORS.GREY, },
+                    ":hover": { backgroundColor: COLORS.LIGHTGREY, },
                   }}
                 >
                   Share

@@ -1,13 +1,17 @@
 import React from 'react';
 import { FormControl, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { PermissionsProps } from './SharingModal';
+import { COLORS } from '../constants';
 
 type PermissionItemProps = {
+  clearable?: boolean;
   onChangeExpiryDate: (newDate: Date | null) => void;
   onChangePermissions: (event: SelectChangeEvent) => void;
+  onClear?: (user_id: string) => void;
   permission: PermissionsProps;
   isCurrUser: boolean;
   isUserOwner: boolean;
@@ -15,8 +19,10 @@ type PermissionItemProps = {
 };
 
 const PermissionItem: React.FC<PermissionItemProps> = ({
+  clearable = false,
   onChangeExpiryDate,
   onChangePermissions,
+  onClear,
   permission,
   isCurrUser,
   isUserOwner,
@@ -33,7 +39,20 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
         alignItems: 'center',
       }}
     >
-      <div>{permission.USER_ID}</div>
+      {clearable &&
+        <HighlightOffRoundedIcon
+          sx={{
+            color: COLORS.GREY,
+          }}
+          onClick={() => onClear && onClear(permission.USER_ID)}
+        />
+      }
+      <div
+        style={{
+          flexGrow: 1,
+          marginLeft: (clearable ? '0.5rem' : '0'),
+        }}
+      >{permission.USER_ID}</div>
       <div
         style={{
           display: 'flex',

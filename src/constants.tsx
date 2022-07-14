@@ -2,7 +2,8 @@ export const COLORS = {
   PRIMARY: '#ED6237',
   WHITE: '#FFFFFF',
   BLACK: '#000000',
-  GREY: '#EBEBEB',
+  LIGHTGREY: '#EBEBEB',
+  GREY: '#999999',
   GREEN: '#8bbe55',
   LIGHTGREEN: '#def6c5',
 };
