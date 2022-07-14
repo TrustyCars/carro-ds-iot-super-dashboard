@@ -1,6 +1,10 @@
 export const COLORS = {
   PRIMARY: '#ED6237',
   WHITE: '#FFFFFF',
+  BLACK: '#000000',
+  GREY: '#EBEBEB',
+  GREEN: '#8bbe55',
+  LIGHTGREEN: '#def6c5',
 };
 
 export const COUNTRY_RADIUS = {
@@ -23,6 +27,7 @@ export const ENDPOINT_HOME = {
 };
 export const ENDPOINT_PATHS = {
   LOGIN: '/user/login',
+  GET_USERS: '/user/get_users',
 
   // Carro Everywhere
   LATEST_VOLTAGE_LEVELS: '/devices/latest_voltage_levels',
@@ -37,6 +42,8 @@ export const ENDPOINT_PATHS = {
 
   // Smart Keypress
   GET_USER_DEVICES: '/devices/all',
+  GET_PERMISSIONS: '/device/permissions',
+  UPDATE_PERMISSIONS: '/device/update_permissions',
 };
 
 export const PID_MAPPINGS: { [key: string]: string } = {
