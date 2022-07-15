@@ -7,12 +7,6 @@ import { KeypressDeviceProps, UserProps } from '../Keypress';
 import strftime from '../utils/strftime';
 import SharingModal from './SharingModal';
 
-type PermissionsProps = {
-  USER_ID: string;
-  PERMISSION: string;
-  EXPIRY_DATE: number | null;
-};
-
 type VehicleListItemProps = {
   device: KeypressDeviceProps;
   users: UserProps[];
@@ -72,9 +66,9 @@ const VehicleListItem: React.FC<VehicleListItemProps> = ({
               flexGrow: 1,
               marginRight: '0.5rem',
               textTransform: 'none',
-              backgroundColor: COLORS.GREY,
+              backgroundColor: COLORS.LIGHTGREY,
               color: COLORS.BLACK,
-              ":hover": { backgroundColor: COLORS.GREY, },
+              ":hover": { backgroundColor: COLORS.LIGHTGREY, },
             }}
           >
             Share
@@ -92,7 +86,7 @@ const VehicleListItem: React.FC<VehicleListItemProps> = ({
             color: COLORS.GREEN,
             boxShadow: '0px 3px 1px -2px rgb(139 190 85 / 30%), 0px 2px 2px 0px rgb(139 190 85 / 30%), 0px 1px 5px 0px rgb(139 190 85 / 50%)',
             textTransform: 'none',
-            ":hover": { backgroundColor: COLORS.GREY, },
+            ":hover": { backgroundColor: COLORS.LIGHTGREY, },
           }}
         >
           Unlock

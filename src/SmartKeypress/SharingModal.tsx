@@ -4,6 +4,7 @@ import {
   AlertColor,
   Autocomplete,
   Box,
+  Button,
   CircularProgress,
   Divider,
   Modal,
@@ -30,6 +31,10 @@ const modalStyle = {
   boxShadow: '0px 11px 10px -7px rgb(0 0 0 / 20%), 0px 20px 38px 3px rgb(0 0 0 / 14%), 0px 6px 46px 8px rgb(0 0 0 / 12%)',
   py: 3,
   px: 3,
+};
+
+const stringifyPermissions = (arr: PermissionsProps[]) => {
+  return arr.map(r => `${r.USER_ID}_${r.PERMISSION}_${r.EXPIRY_DATE}`).sort().join(',');
 };
 
 export type PermissionsProps = {
@@ -59,7 +64,9 @@ const SharingModal: React.FC<SharingModalProps> = ({
   const [isSnackbarOpen, setIsSnackbarOpen] = React.useState<boolean>(false);
   const [snackbarInfo, setSnackbarInfo] = React.useState<{ status: AlertColor; errorMessage?: string; }>({ status: 'success' });
 
+  const [originalPermissions, setOriginalPermissions] = React.useState<PermissionsProps[]>([]);
   const [permissions, setPermissions] = React.useState<PermissionsProps[]>([]);
+  const [permissionsToDelete, setPermissionsToDelete] = React.useState<PermissionsProps[]>([]);
 
   const [filteredUsers, setFilteredUsers] = React.useState<(UserProps & { label: string })[]>([]);
   const [newUsers, setNewUsers] = React.useState<(UserProps & PermissionsProps)[]>([]);
@@ -67,11 +74,20 @@ const SharingModal: React.FC<SharingModalProps> = ({
   const [autocompleteKey, setAutocompleteKey] = React.useState<number>(0);
   const [autocompleteInputValue, setAutocompleteInputValue] = React.useState<string>('');
 
+  const [edited, setEdited] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     axios.get(ENDPOINT_HOME.KEYPRESS_STAGING + ENDPOINT_PATHS.GET_PERMISSIONS, {
       params: { device_id: device.DEVICE_ID },
     }).then(res => {
-      setPermissions(res.data.body);
+      // Puts the current user at the top of the permissions list
+      const sortedRes = [
+        res.data.body.find((p: PermissionsProps) => p.USER_ID === userId),
+        ...res.data.body.filter((p: PermissionsProps) => p.USER_ID !== userId),
+      ];
+      setPermissions(sortedRes);
+      setOriginalPermissions(sortedRes);
+
       setIsLoading(false);
     }).catch(err => {
       console.error(err);
@@ -80,12 +96,16 @@ const SharingModal: React.FC<SharingModalProps> = ({
 
   React.useEffect(() => {
     if (users.length) {
-      const permissionUserIds = permissions.map((p: PermissionsProps) => p.USER_ID)
+      const filterOutIds = [...permissions, ...newUsers].map((p: PermissionsProps) => p.USER_ID)
       setFilteredUsers(
-        users.filter(u => permissionUserIds.findIndex((p: string) => p === u.USER_ID) === -1).map(u => ({ ...u, label: u.USER_ID })));
+        users.filter(u => filterOutIds.findIndex((p: string) => p === u.USER_ID) === -1).map(u => ({ ...u, label: u.USER_ID })));
       setAutocompleteKey((new Date()).getTime());
     }
-  }, [permissions]);
+  }, [newUsers, permissions]);
+
+  React.useEffect(() => {
+    setEdited(stringifyPermissions(originalPermissions) !== stringifyPermissions([...newUsers, ...permissions, ...permissionsToDelete]));
+  }, [newUsers, permissions, permissionsToDelete]);
 
   return (
     <>
@@ -94,9 +114,32 @@ const SharingModal: React.FC<SharingModalProps> = ({
         onClose={() => setIsModalOpen(false)}
       >
         <Box sx={modalStyle}>
-          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-            Share {device.CARPLATE_NO}
-          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.5rem',
+            }}
+          >
+            <Typography variant="h6" component="h2">
+              Share {device.CARPLATE_NO}
+            </Typography>
+            {edited &&
+              <Button
+                sx={{
+                  textDecoration: 'underline',
+                  textTransform: 'none',
+                  color: COLORS.GREY,
+                }}
+                onClick={() => {
+                  setPermissions(originalPermissions);
+                  setNewUsers([]);
+                  setPermissionsToDelete([]);
+                }}
+              >Reset</Button>
+            }
+          </div>
           {isLoading
             ? <div>
                 <CircularProgress />
@@ -107,10 +150,16 @@ const SharingModal: React.FC<SharingModalProps> = ({
                     ? permissions.map((p, i) => (
                         <PermissionItem
                           key={i}
+                          clearable
                           permission={p}
+                          disable={p.USER_ID === userId}
                           isCurrUser={p.USER_ID === userId}
                           isUserOwner={device.PERMISSION === 'OWNER'}
                           maxExpiryDate={device.EXPIRY_DATE}
+                          onClear={(permission: PermissionsProps) => {
+                            setPermissionsToDelete([...permissionsToDelete, permission]);
+                            setPermissions(permissions.filter(p => p.USER_ID !== permission.USER_ID));
+                          }}
                           onChangePermissions={(event: SelectChangeEvent) => {
                             setPermissions(permissions.map(perm => {
                               if (perm.USER_ID === p.USER_ID) {
@@ -136,20 +185,50 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         />
                       ))
                     : <div>Looks like nobody has permissions to this vehicle.</div>}
+                  {permissionsToDelete.length &&
+                    <>
+                      <div
+                        style={{
+                          marginBottom: '0.4rem',
+                          marginTop: '1rem',
+                          marginLeft: '0.1rem',
+                          color: COLORS.GREY,
+                        }}
+                      >Users below will be removed</div>
+                      {permissionsToDelete.map((p, i) => (
+                        <PermissionItem
+                          key={i}
+                          compact
+                          clearable
+                          permission={p}
+                          disable
+                          isCurrUser={p.USER_ID === userId}
+                          isUserOwner={device.PERMISSION === 'OWNER'}
+                          maxExpiryDate={device.EXPIRY_DATE}
+                          onClear={(permission: PermissionsProps) => {
+                            setPermissionsToDelete(permissionsToDelete.filter(p => p.USER_ID !== permission.USER_ID));
+                            setPermissions([...permissions, permission]);
+                          }}
+                        />
+                      ))}
+                    </>
+                  }
                 </Stack>
                 <div
                   style={{
                     marginBottom: '0.4rem',
                     marginTop: '2rem',
                     marginLeft: '0.1rem',
-                    color: '#999',
+                    color: COLORS.GREY,
                   }}
                 >Add a new person</div>
                 <Stack spacing={1} divider={<Divider orientation="horizontal" flexItem />} sx={{ maxHeight: '25vh', overflowY: 'auto' }}>
                   {newUsers.map((u, i) => (
                     <PermissionItem
                       key={i}
+                      clearable
                       permission={u}
+                      disable={u.USER_ID === userId}
                       isCurrUser={u.USER_ID === userId}
                       isUserOwner={device.PERMISSION === 'OWNER'}
                       maxExpiryDate={device.EXPIRY_DATE}
@@ -174,6 +253,9 @@ const SharingModal: React.FC<SharingModalProps> = ({
                           }
                           else return new_u;
                         }));
+                      }}
+                      onClear={(permission: PermissionsProps) => {
+                        setNewUsers(newUsers.filter(new_u => (permission.USER_ID !== new_u.USER_ID)));
                       }}
                     />
                   ))}
@@ -212,6 +294,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                     const payload = [
                       ...(permissions.map(p => ({ USER_ID: p.USER_ID, PERMISSION: p.PERMISSION, EXPIRY_DATE: p.EXPIRY_DATE }))),
                       ...(newUsers.map(u => ({ USER_ID: u.USER_ID, PERMISSION: u.PERMISSION, EXPIRY_DATE: u.EXPIRY_DATE }))),
+                      ...(permissionsToDelete.map(p => ({ USER_ID: p.USER_ID, PERMISSION: 'EXPIRED', EXPIRY_DATE: null }))),
                     ];
 
                     axios.post(ENDPOINT_HOME.KEYPRESS_STAGING + ENDPOINT_PATHS.UPDATE_PERMISSIONS,
@@ -227,6 +310,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         setIsModalOpen(false);
 
                         setPermissions([...permissions, ...newUsers]);
+                        setPermissionsToDelete([]);
                         setNewUsers([]);
                       }
                       else if (res.data.statusCode === 400) {
@@ -249,9 +333,9 @@ const SharingModal: React.FC<SharingModalProps> = ({
                     marginTop: '1.5rem',
                     float: 'right',
                     textTransform: 'none',
-                    backgroundColor: COLORS.GREY,
+                    backgroundColor: COLORS.LIGHTGREY,
                     color: COLORS.BLACK,
-                    ":hover": { backgroundColor: COLORS.GREY, },
+                    ":hover": { backgroundColor: COLORS.LIGHTGREY, },
                   }}
                 >
                   Share

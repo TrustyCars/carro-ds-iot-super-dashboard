@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { CircularProgress, Divider, Stack, TextField } from '@mui/material';
-import { ENDPOINT_HOME, ENDPOINT_PATHS } from './constants';
+import { COLORS, ENDPOINT_HOME, ENDPOINT_PATHS } from './constants';
 import useWindowDimensions from './hooks/useWindowDimensions';
 import VehicleListItem from './SmartKeypress/VehicleListItem';
 
@@ -67,7 +67,7 @@ const Keypress: React.FC = () => {
           style={{
             marginBottom: '0.7rem',
             marginLeft: '0.1rem',
-            color: '#999',
+            color: COLORS.GREY,
           }}
         >Search for a car</div>
         <TextField
@@ -87,7 +87,7 @@ const Keypress: React.FC = () => {
             marginBottom: '0.5rem',
             marginTop: '3rem',
             marginLeft: '0.1rem',
-            color: '#999',
+            color: COLORS.GREY,
           }}
         >Search results</div>
         <div style={{ flexGrow: 1, height: '60vh', overflowY: 'scroll' }}>
