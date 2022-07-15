@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import { ENDPOINT_HOME, ENDPOINT_PATHS } from '../constants';
+import { Paper } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { ENDPOINT_HOME, ENDPOINT_PATHS } from '../constants';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const decryptCommand = (command: number) => {
@@ -43,17 +44,45 @@ const LockUnlockHistory: React.FC = () => {
     <div
       style={{
         width: (width > 1200 ? '45vw' : '90vw'),
-        height: '85vh',
         paddingTop: '2rem',
         paddingLeft: '2rem',
       }}
     >
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        autoPageSize
-        components={{ Toolbar: GridToolbar }}
-      />
+      <Paper
+        elevation={3}
+        sx={{
+          padding: '1rem',
+          height: '84vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '1.2rem',
+            fontWeight: 'bold',
+            marginBottom: '0.7rem',
+            textAlign: 'center',
+          }}
+        >Device Command History</div>
+        <div
+          style={{ flexGrow: 1 }}
+        >
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            autoPageSize
+            components={{ Toolbar: GridToolbar }}
+            sx={{
+              '& .MuiDataGrid-toolbarContainer': {
+                display: 'flex',
+                justifyContent: 'center',
+                '& div': { flex: 0 },
+              },
+            }}
+          />
+        </div>
+      </Paper>
     </div>
   );
 };

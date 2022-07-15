@@ -31,36 +31,38 @@ const VoltageLevel: React.FC = () => {
         paddingLeft: '2rem',
       }}
     >
-      <TableContainer component={Paper} sx={{ 'th, td': { fontFamily: 'Poppins' } }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" colSpan={3} sx={{ fontSize: '1rem', fontWeight: '600' }}>
-                Devices with Low Battery Level
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell align="right">Device ID</TableCell>
-              <TableCell align="right">Carplate Number</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row: { [key: string]: any}) => (
-              <TableRow
-                key={`${row.TIMESTAMP}_${row.DEVICE_ID}`}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {new Date(parseInt(row.TIMESTAMP)*1000).toLocaleString()}
+      <Paper elevation={3} sx={{ padding: '1rem', paddingTop: '0.3rem' }}>
+        <TableContainer component='div' sx={{ 'th, td': { fontFamily: 'Poppins' } }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center" colSpan={3} sx={{ fontSize: '1.2rem', fontWeight: '600', paddingBottom: '0.75rem' }}>
+                  Devices with Low Battery Level
                 </TableCell>
-                <TableCell align="right">{row.DEVICE_ID}</TableCell>
-                <TableCell align="right">{row.CARPLATE_NO}</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell align="right">Device ID</TableCell>
+                <TableCell align="right">Carplate Number</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row: { [key: string]: any}) => (
+                <TableRow
+                  key={`${row.TIMESTAMP}_${row.DEVICE_ID}`}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {new Date(parseInt(row.TIMESTAMP)*1000).toLocaleString()}
+                  </TableCell>
+                  <TableCell align="right">{row.DEVICE_ID}</TableCell>
+                  <TableCell align="right">{row.CARPLATE_NO}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     </div>
   );
 };
