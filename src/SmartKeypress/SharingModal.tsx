@@ -312,6 +312,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         setPermissions([...permissions, ...newUsers]);
                         setPermissionsToDelete([]);
                         setNewUsers([]);
+                        setOriginalPermissions([...newUsers, ...permissions, ...permissionsToDelete]);
                       }
                       else if (res.data.statusCode === 400) {
                         // Permissions update failed for some reason. Display toast with error message.
