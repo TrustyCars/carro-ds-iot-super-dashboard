@@ -103,7 +103,13 @@ function DeviceList() {
   return (
     <>
       <Header />
-      <div className="device-page-container" style={{ padding: `7rem ${width < 768 ? '4%' : '10%'} 0 ${width < 768 ? '4%' : '10%'}` }}>
+      <div
+        className="device-page-container"
+        style={{
+          padding: `7rem ${width < 768 ? '4%' : '10%'} 0 ${width < 768 ? '4%' : '10%'}`,
+          flexGrow: 1,
+        }}
+      >
       <Card sx={{ mx: '1rem', background: '#fbfbfb', pb: '0' }}>
         <CardContent>
          <div className='title'>Devices</div>
