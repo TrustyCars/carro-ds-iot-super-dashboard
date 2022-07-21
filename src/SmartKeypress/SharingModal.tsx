@@ -16,7 +16,7 @@ import {
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import { COLORS, ENDPOINT_HOME, ENDPOINT_PATHS } from '../constants';
 import { KeypressDeviceProps, UserProps } from '../Keypress';
-import SharingSnackbar from './SharingSnackbar';
+import Snackbar from '../Snackbar';
 import PermissionItem from './PermissionItem';
 import { JwtTokenContext } from '../App';
 
@@ -62,7 +62,10 @@ const SharingModal: React.FC<SharingModalProps> = ({
   const [isSharingLoading, setIsSharingLoading] = React.useState<boolean>(false);
 
   const [isSnackbarOpen, setIsSnackbarOpen] = React.useState<boolean>(false);
-  const [snackbarInfo, setSnackbarInfo] = React.useState<{ status: AlertColor; errorMessage?: string; }>({ status: 'success' });
+  const [snackbarInfo, setSnackbarInfo] = React.useState<{ status: AlertColor; message: string; }>({
+    status: 'success',
+    message: 'Permissions update success!',
+  });
 
   const [originalPermissions, setOriginalPermissions] = React.useState<PermissionsProps[]>([]);
   const [permissions, setPermissions] = React.useState<PermissionsProps[]>([]);
@@ -320,7 +323,7 @@ const SharingModal: React.FC<SharingModalProps> = ({
                         setIsSnackbarOpen(true);
                         setSnackbarInfo({
                           status: 'error',
-                          errorMessage: res.data.body,
+                          message: `Permissions update failed. ${res.data.body}`,
                         });
                       }
                     });
@@ -345,9 +348,9 @@ const SharingModal: React.FC<SharingModalProps> = ({
           }
         </Box>
       </Modal>
-      <SharingSnackbar
+      <Snackbar
         status={snackbarInfo.status}
-        errorMessage={snackbarInfo.errorMessage}
+        message={snackbarInfo.message}
         isSnackbarOpen={isSnackbarOpen}
         setIsSnackbarOpen={setIsSnackbarOpen}
       />

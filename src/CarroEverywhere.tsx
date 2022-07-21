@@ -16,9 +16,9 @@ const CarroEverywhere: React.FC = () => {
   const menuItems: {
     [key: string]: React.ReactElement
   } = {
-    '🪵 Command History': <LockUnlockHistory visible={currentMenuItem === '🪵 Command History'} />,
-    '🪫 Low Battery Devices': <VoltageLevel visible={currentMenuItem === '🪫 Low Battery Devices'} />,
-    '✍🏻 Register Object': <RegisterObject visible={currentMenuItem === '✍🏻 Register Object'} />
+    '🪵 Command History': <LockUnlockHistory key={0} visible={currentMenuItem === '🪵 Command History'} />,
+    '🪫 Low Battery Devices': <VoltageLevel key={1} visible={currentMenuItem === '🪫 Low Battery Devices'} />,
+    '✍🏻 Register Object': <RegisterObject key={2} visible={currentMenuItem === '✍🏻 Register Object'} />
   };
 
   const toggleDrawer =
@@ -40,7 +40,7 @@ const CarroEverywhere: React.FC = () => {
       {!isDesktop(width) &&
         <MenuRoundedIcon
           onClick={toggleDrawer(true)}
-          sx={{ margin: '1rem', cursor: 'pointer', color: COLORS.PRIMARY, }}
+          sx={{ margin: '1rem', cursor: 'pointer', color: COLORS.PRIMARY, position: 'fixed', }}
           fontSize='large'
         />
       }
@@ -54,10 +54,10 @@ const CarroEverywhere: React.FC = () => {
         open={isDrawerOpen}
         onClose={toggleDrawer(false)}
         sx={{
-          width: '30vw',
+          width: (isDesktop(width) ? '25vw' : '60vw'),
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: '30vw',
+            width: (isDesktop(width) ? '25vw' : '60vw'),
             margin: '6rem 2rem 2rem 2rem',
             borderRadius: '0.25rem',
             boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
@@ -89,9 +89,9 @@ const CarroEverywhere: React.FC = () => {
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          marginLeft: (isDesktop(width) ? '2rem' : 0),
-          paddingTop: '2rem',
-          paddingLeft: (isDesktop(width) ? '2rem' : '1rem'),
+          marginLeft: (isDesktop(width) ? '2rem' : '1rem'),
+          paddingTop: (isDesktop(width) ? '2rem' : '4rem'),
+          paddingLeft: (isDesktop(width) ? '2rem' : '0rem'),
         }}
       >
         {currentMenuItem == undefined &&
