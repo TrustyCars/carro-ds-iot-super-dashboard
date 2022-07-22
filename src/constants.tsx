@@ -35,6 +35,7 @@ export const ENDPOINT_PATHS = {
   // Carro Everywhere
   LATEST_VOLTAGE_LEVELS: '/devices/latest_voltage_levels',
   COMMAND_HISTORY: '/devices/get_command_history',
+  DEVICE_INIT: '/device/init',
 
   // Fleet Management
   DEVICE_INFO: '/device/info',
