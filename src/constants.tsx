@@ -26,6 +26,7 @@ export const ENDPOINT_HOME = {
   PRODUCTION: 'https://xkh3ebmhgk.execute-api.ap-southeast-1.amazonaws.com/api',
   STAGING: 'https://xkh3ebmhgk.execute-api.ap-southeast-1.amazonaws.com/staging',
   KEYPRESS_STAGING: 'https://nefvok4p73.execute-api.ap-southeast-1.amazonaws.com/staging',
+  SALES_POD_STAGING: 'https://sjkxbzjjee.execute-api.ap-southeast-1.amazonaws.com/staging',
 };
 export const ENDPOINT_PATHS = {
   LOGIN: '/user/login',
@@ -49,6 +50,9 @@ export const ENDPOINT_PATHS = {
   GET_VEHICLES: '/vehicles/all',
   GET_DEVICES: '/devices/all',
   REGISTER_VEHICLES_AND_KEYS: '/register_vehicle_and_keys',
+
+  // Sales Pod
+  GET_ACTIONS: '/actions/all',
 };
 
 export const PID_MAPPINGS: { [key: string]: string } = {
