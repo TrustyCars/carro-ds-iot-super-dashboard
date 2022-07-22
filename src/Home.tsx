@@ -18,11 +18,13 @@ import Keypress from './Keypress';
 import InvalidDashboard from './InvalidDashboard';
 import DeviceList from './FleetManagement/deviceList';
 import Device from './FleetManagement/device';
+import SalesPod from './SalesPod';
 
 enum DASHBOARDS {
   CARRO_EVERYWHERE = 'CARRO_EVERYWHERE',
   FLEET_MANAGEMENT = 'FLEET_MANAGEMENT',
   KEYPRESS = 'KEYPRESS',
+  SALES_POD = 'SALES_POD',
 };
 
 const getHomeElement = (currDashboard: string, userDashboards: string[]) => {
@@ -39,6 +41,8 @@ const getHomeElement = (currDashboard: string, userDashboards: string[]) => {
       return <FleetManagement />;
     case DASHBOARDS.KEYPRESS:
       return <Keypress />;
+    case DASHBOARDS.SALES_POD:
+      return <SalesPod />;
   }
 };
 
@@ -91,6 +95,15 @@ const Home: React.FC = () => {
           dashboard: DASHBOARDS.CARRO_EVERYWHERE,
           element: (<MenuItem key={DASHBOARDS.CARRO_EVERYWHERE} value={DASHBOARDS.CARRO_EVERYWHERE}>
                       Carro Everywhere
+                    </MenuItem>)
+        });
+      }
+
+      if (parseInt(status[STATUS_PLACES-4])) {
+        tempUserDashboards.push({
+          dashboard: DASHBOARDS.SALES_POD,
+          element: (<MenuItem key={DASHBOARDS.SALES_POD} value={DASHBOARDS.SALES_POD}>
+                      Sales Pod
                     </MenuItem>)
         });
       }
@@ -151,9 +164,6 @@ const Home: React.FC = () => {
                 {userDashboards.map(d => d.element)}
               </Select>
             </FormControl>
-            {/* <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Carro Everywhere
-            </Typography> */}
             <div style={{ flexGrow: 1 }} />
             <LogoutButton />
           </Toolbar>
