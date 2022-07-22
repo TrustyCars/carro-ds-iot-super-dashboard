@@ -160,6 +160,7 @@ const Home: React.FC = () => {
         </AppBar>
         <div
           style={{
+            display: 'flex',
             boxSizing: 'border-box',
             minWidth: '100vw',
             minHeight: '100vh',

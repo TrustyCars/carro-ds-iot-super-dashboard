@@ -20,6 +20,45 @@ const LoginForm: React.FC = () => {
 
   const { setToken } = React.useContext(JwtTokenContext);
 
+  const handleLogin = React.useCallback(() => {
+    setIsLoading(true);
+    axios(ENDPOINT_HOME.STAGING + ENDPOINT_PATHS.LOGIN, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        user_id: username,
+        password: password,
+      },
+    }).then(res => {
+      setIsLoading(false);
+      if (res.data.statusCode == 200) {
+        localStorage.setItem('jwt_token', res.data.token);
+        if (setToken) setToken(res.data.token);
+      }
+      else if (res.data.statusCode == 401) {
+        setDidLoginFail(true);
+      }
+    }).catch(err => {
+      console.log(err);
+      setIsLoading(false);
+      setDidLoginFail(true);
+    });
+  }, [username, password]);
+
+  React.useEffect(() => {
+    window.addEventListener('keydown', event => {
+      if (event.key === "Enter") handleLogin();
+    });
+
+    return () => {
+      window.removeEventListener('keydown', event => {
+        if (event.key === "Enter") handleLogin();
+      });
+    };
+  }, [handleLogin]);
+
   return (
     <>
       <img src={Logo} style={{ width: '70%', marginBottom: '0.5rem' }} />
@@ -55,8 +94,10 @@ const LoginForm: React.FC = () => {
           </InputAdornment>
         }
         style={{ margin: '1rem 0' }}
-        onChange={event => setPassword(event.target.value)}/>
+        onChange={event => setPassword(event.target.value)}
+      />
       <LoadingButton
+        type="submit"
         loading={isLoading}
         variant="contained"
         sx={{
@@ -71,32 +112,7 @@ const LoginForm: React.FC = () => {
           fontSize: '1rem',
           marginBottom: '1rem',
         }}
-        onClick={() => {
-          setIsLoading(true);
-          axios(ENDPOINT_HOME.STAGING + ENDPOINT_PATHS.LOGIN, {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            data: {
-              user_id: username,
-              password: password,
-            },
-          }).then(res => {
-            setIsLoading(false);
-            if (res.data.statusCode == 200) {
-              localStorage.setItem('jwt_token', res.data.token);
-              if (setToken) setToken(res.data.token);
-            }
-            else if (res.data.statusCode == 401) {
-              setDidLoginFail(true);
-            }
-          }).catch(err => {
-            console.log(err);
-            setIsLoading(false);
-            setDidLoginFail(true);
-          });
-        }}
+        onClick={handleLogin}
       >Login</LoadingButton>
       <Alert severity="error" sx={{ visibility: (didLoginFail ? 'visible' : 'hidden') }}>Invalid login. Please check your credentials & try again.</Alert>
     </>

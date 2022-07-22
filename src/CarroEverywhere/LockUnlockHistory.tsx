@@ -4,6 +4,7 @@ import { Paper } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { ENDPOINT_HOME, ENDPOINT_PATHS } from '../constants';
 import useWindowDimensions from '../hooks/useWindowDimensions';
+import { isDesktop } from '../utils/utils';
 
 const decryptCommand = (command: number) => {
   switch (command) {
@@ -16,10 +17,17 @@ const decryptCommand = (command: number) => {
   }
 };
 
-const LockUnlockHistory: React.FC = () => {
+type LockUnlockHistoryProps = {
+  visible: boolean;
+};
+
+const LockUnlockHistory: React.FC<LockUnlockHistoryProps> = ({
+  visible,
+}) => {
   const { width } = useWindowDimensions();
 
   const [rows, setRows] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 80, },
@@ -37,15 +45,15 @@ const LockUnlockHistory: React.FC = () => {
           device_id: r.DEVICE_ID,
           command: decryptCommand(r.COMMAND),
         })));
+        setIsLoading(false);
       });
   }, []);
 
   return (
     <div
       style={{
-        width: (width > 1200 ? '45vw' : '90vw'),
-        paddingTop: '2rem',
-        paddingLeft: '2rem',
+        display: (visible ? 'block' : 'none'),
+        width: (isDesktop(width) ? '60vw' : '87vw'),
       }}
     >
       <Paper
@@ -73,6 +81,7 @@ const LockUnlockHistory: React.FC = () => {
             columns={columns}
             autoPageSize
             components={{ Toolbar: GridToolbar }}
+            loading={isLoading}
             sx={{
               '& .MuiDataGrid-toolbarContainer': {
                 display: 'flex',

@@ -1,15 +1,15 @@
 import React from 'react';
-import { Alert, AlertColor, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Snackbar as MuiSnackbar } from '@mui/material';
 
-type SharingSnackbarProps = {
-  errorMessage?: string;
+type SnackbarProps = {
+  message: string;
   isSnackbarOpen: boolean;
   setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   status: AlertColor;
 };
 
-const SharingSnackbar: React.FC<SharingSnackbarProps> = ({
-  errorMessage,
+const Snackbar: React.FC<SnackbarProps> = ({
+  message,
   isSnackbarOpen,
   setIsSnackbarOpen,
   status,
@@ -21,19 +21,17 @@ const SharingSnackbar: React.FC<SharingSnackbarProps> = ({
   };
 
   return (
-    <Snackbar
+    <MuiSnackbar
       sx={{ mb: 2 }}
       open={isSnackbarOpen}
       autoHideDuration={6000}
       onClose={handleCloseSnackbar}
     >
       <Alert onClose={handleCloseSnackbar} severity={status} sx={{ width: '100%' }}>
-        {status === 'success'
-          ? 'Permissions update success!'
-          : `Permissions update failed. ${errorMessage}`}
+        {message}
       </Alert>
-    </Snackbar>
+    </MuiSnackbar>
   );
 };
 
-export default SharingSnackbar;
+export default Snackbar;

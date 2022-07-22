@@ -43,9 +43,12 @@ export const ENDPOINT_PATHS = {
   LATEST_POSITIONS: '/devices/positions',
 
   // Smart Keypress
-  GET_USER_DEVICES: '/devices/all',
+  GET_USER_DEVICES: '/devices/my_devices',
   GET_PERMISSIONS: '/device/permissions',
   UPDATE_PERMISSIONS: '/device/update_permissions',
+  GET_VEHICLES: '/vehicles/all',
+  GET_DEVICES: '/devices/all',
+  REGISTER_VEHICLES_AND_KEYS: '/register_vehicle_and_keys',
 };
 
 export const PID_MAPPINGS: { [key: string]: string } = {

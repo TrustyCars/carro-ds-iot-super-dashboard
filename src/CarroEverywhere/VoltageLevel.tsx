@@ -10,8 +10,15 @@ import {
   TableRow } from '@mui/material';
 import { ENDPOINT_HOME, ENDPOINT_PATHS } from '../constants';
 import useWindowDimensions from '../hooks/useWindowDimensions';
+import { isDesktop } from '../utils/utils';
 
-const VoltageLevel: React.FC = () => {
+type VoltageLevelProps = {
+  visible: boolean;
+};
+
+const VoltageLevel: React.FC<VoltageLevelProps> = ({
+  visible,
+}) => {
   const { width } = useWindowDimensions();
 
   const [rows, setRows] = React.useState([]);
@@ -26,9 +33,8 @@ const VoltageLevel: React.FC = () => {
   return (
     <div
       style={{
-        width: (width > 1200 ? '40vw' : '90vw'),
-        paddingTop: '2rem',
-        paddingLeft: '2rem',
+        display: (visible ? 'block' : 'none'),
+        width: (isDesktop(width) ? '60vw' : '87vw'),
       }}
     >
       <Paper elevation={3} sx={{ padding: '1rem', paddingTop: '0.3rem' }}>
