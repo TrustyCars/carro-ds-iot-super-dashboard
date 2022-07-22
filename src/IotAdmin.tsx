@@ -10,6 +10,7 @@ import Snackbar from './Snackbar';
 const IotAdmin = () => {
   const { width } = useWindowDimensions();
 
+  const [deviceId, setDeviceId] = React.useState<string>('');
   const [deviceGroup, setDeviceGroup] = React.useState<string>('1');
   const [smsNumber, setSmsNumber] = React.useState<string>('');
   const [bleMacAddress, setBleMacAddress] = React.useState<string>('');
@@ -55,6 +56,16 @@ const IotAdmin = () => {
             flexDirection: 'column',
           }}
         >
+           <TextField
+            label='Device ID'
+            variant='standard'
+            required
+            sx={{
+              marginBottom: '0.7rem',
+            }}
+            value={deviceId}
+            onChange={event => setDeviceId(event.target.value)}
+          />
           <TextField
             label='SMS Number'
             variant='standard'
@@ -107,7 +118,8 @@ const IotAdmin = () => {
               }
               else {
                 setIsLoading(true);
-                axios.post(ENDPOINT_HOME.STAGING + ENDPOINT_PATHS.DEVICE_INIT, {
+                axios.post(ENDPOINT_HOME.PRODUCTION + ENDPOINT_PATHS.DEVICE_INIT, {
+                  device_id: deviceId,
                   device_grp: parseInt(deviceGroup),
                   sms: smsNumber,
                   ble_address: bleMacAddress,
@@ -119,6 +131,7 @@ const IotAdmin = () => {
                         message: `Create success! Your new device's ID is: ${res.data.body.device_id}`,
                       });
 
+                      setDeviceId('');
                       setSmsNumber('');
                       setDeviceGroup('1');
                       setBleMacAddress('');
