@@ -19,12 +19,14 @@ import InvalidDashboard from './InvalidDashboard';
 import DeviceList from './FleetManagement/deviceList';
 import Device from './FleetManagement/device';
 import SalesPod from './SalesPod';
+import IotAdmin from './IotAdmin';
 
 enum DASHBOARDS {
   CARRO_EVERYWHERE = 'CARRO_EVERYWHERE',
   FLEET_MANAGEMENT = 'FLEET_MANAGEMENT',
   KEYPRESS = 'KEYPRESS',
   SALES_POD = 'SALES_POD',
+  IOT_ADMIN = 'IOT_ADMIN',
 };
 
 const getHomeElement = (currDashboard: string, userDashboards: string[]) => {
@@ -43,6 +45,8 @@ const getHomeElement = (currDashboard: string, userDashboards: string[]) => {
       return <Keypress />;
     case DASHBOARDS.SALES_POD:
       return <SalesPod />;
+    case DASHBOARDS.IOT_ADMIN:
+      return <IotAdmin />;
   }
 };
 
@@ -104,6 +108,15 @@ const Home: React.FC = () => {
           dashboard: DASHBOARDS.SALES_POD,
           element: (<MenuItem key={DASHBOARDS.SALES_POD} value={DASHBOARDS.SALES_POD}>
                       Sales Pod
+                    </MenuItem>)
+        });
+      }
+
+      if (parseInt(status[STATUS_PLACES-5])) {
+        tempUserDashboards.push({
+          dashboard: DASHBOARDS.IOT_ADMIN,
+          element: (<MenuItem key={DASHBOARDS.IOT_ADMIN} value={DASHBOARDS.IOT_ADMIN}>
+                      IoT Admin
                     </MenuItem>)
         });
       }
